@@ -27,10 +27,10 @@ for i = 1:nsub
     
     
     E_pre_dmt(i,:) = time_resolved_control_energy_fast(Anorm,T,ts_pre);
-    E_tot_pre_dmt(i,1) = mean(E_pre_dmt(i,:),2);
+    E_tot_pre_dmt(i,1) = mean(E_pre_dmt(i,:)');
    
     E_post_dmt(i,:) = time_resolved_control_energy_fast(Anorm,T,ts_post);
-    E_tot_post_dmt(i,1) = mean(E_post_dmt(i,:),2);
+    E_tot_post_dmt(i,1) = mean(E_post_dmt(i,:)');
     
     %% L2 normalization
     
@@ -38,12 +38,12 @@ for i = 1:nsub
     ts_post = L2MAGNITUDENORM(TS{i,2}); ts_post(:,1)=[];
     
     E_pre_dmt_l2(i,:) = time_resolved_control_energy_fast(Anorm,T,ts_pre);
-    E_tot_pre_dmt_l2(i,1) = mean(E_pre_dmt_l2(i,:),2);
+    E_tot_pre_dmt_l2(i,1) = mean(E_pre_dmt_l2(i,:)');
    
     E_post_dmt_l2(i,:) = time_resolved_control_energy_fast(Anorm,T,ts_post);
-    E_tot_post_dmt_l2(i,1) = mean(E_post_dmt_l2(i,:),2);
+    E_tot_post_dmt_l2(i,1) = mean(E_post_dmt_l2(i,:)');
 
-    %% Distance normalization - requires some special handling - must break into pairs of states prior to normalization
+    %% Distance normalization - requires some special handling
     ts_pre = TS{i,1}; 
     ts_post = TS{i,2}; 
     
@@ -58,12 +58,12 @@ for i = 1:nsub
     [x0_post,xf_post,x0xfmag_post(i,:)] = DISTANCENORM(x0_post,xf_post);
     
     E_pre_dmt_dist(i,:) = MIN_CONTROL_ENERGY(Anorm, WcI, x0_pre, xf_pre, T,false);
-    E_tot_pre_dmt_dist(i,1) = mean(E_pre_dmt_dist(i,:),2);
+    E_tot_pre_dmt_dist(i,1) = mean(E_pre_dmt_dist(i,:)');
    
     E_post_dmt_dist(i,:) = MIN_CONTROL_ENERGY(Anorm, WcI, x0_post, xf_post, T,false);
-    E_tot_post_dmt_dist(i,1) = mean(E_post_dmt_dist(i,:),2);
+    E_tot_post_dmt_dist(i,1) = mean(E_post_dmt_dist(i,:)');
     
-    %% Double normalization - requires some special handling - must break into pairs of states prior to normalization
+    %% Double normalization
     x0_pre = ts_pre(:,2:size(ts_pre,2)-1); %% discard first volume
     xf_pre = ts_pre(:,3:size(ts_pre,2));
     
@@ -75,12 +75,12 @@ for i = 1:nsub
     [x0_post,xf_post,x0xfmag_post_double(i,:)] = DOUBLENORM(x0_post,xf_post);
     
     E_pre_dmt_double(i,:) = MIN_CONTROL_ENERGY(Anorm, WcI, x0_pre, xf_pre, T,false);
-    E_tot_pre_dmt_double(i,1) = mean(E_pre_dmt_double(i,:),2);
+    E_tot_pre_dmt_double(i,1) = mean(E_pre_dmt_double(i,:)');
    
     E_post_dmt_double(i,:) = MIN_CONTROL_ENERGY(Anorm, WcI, x0_post, xf_post, T,false);
-    E_tot_post_dmt_double(i,1) = mean(E_post_dmt_double(i,:),2);
+    E_tot_post_dmt_double(i,1) = mean(E_post_dmt_double(i,:)');
     
-    %% radial normalization - requires some special handling - must break into pairs of states prior to normalization
+    %% radial normalization
     x0_pre = ts_pre(:,2:size(ts_pre,2)-1); %% discard first volume
     xf_pre = ts_pre(:,3:size(ts_pre,2));
     
@@ -92,10 +92,10 @@ for i = 1:nsub
     [x0_post,xf_post] = RADIALNORM(x0_post,xf_post);
     
     E_pre_dmt_rad(i,:) = MIN_CONTROL_ENERGY(Anorm, WcI, x0_pre, xf_pre, T,false);
-    E_tot_pre_dmt_rad(i,1) = mean(E_pre_dmt_rad(i,:),2);
+    E_tot_pre_dmt_rad(i,1) = mean(E_pre_dmt_rad(i,:)');
    
     E_post_dmt_rad(i,:) = MIN_CONTROL_ENERGY(Anorm, WcI, x0_post, xf_post, T,false);
-    E_tot_post_dmt_rad(i,1) = mean(E_post_dmt_rad(i,:),2);
+    E_tot_post_dmt_rad(i,1) = mean(E_post_dmt_rad(i,:)');
     
 end
 
