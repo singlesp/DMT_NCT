@@ -1,4 +1,4 @@
-function Anorm = NORMALIZE(A,c)
+function Anorm = NORMALIZE(A,c,system)
 
 % scale adjacency matrix in various ways
 
@@ -9,4 +9,23 @@ if ~exist('c','var')
 	disp('automatically setting c=0 so that A is normalized to a max eigenval of 0.')
 	c=0;
 end
-Anorm = (A / (c+ max(eig(A))) ) - eye(length(A));
+
+% Check if 'system' exists, if not set it to 'continuous'
+if ~exist('system','var') || isempty(system)
+	disp('automatically setting system to ''continuous''.')
+	system = 'continuous';
+else
+    try
+        system = validatestring(system, {'continuous', 'discrete'});
+    catch ME
+        error('System input must be either ''continuous'' or ''discrete''.')
+    end
+end
+
+Anorm = (A / (c+ max(eig(A))) );
+
+if strcmp(system, 'continuous')
+    Anorm = Anorm - eye(length(A));
+end
+
+end
