@@ -21,4 +21,5 @@ Phi = expm(A*T)*x0 - xf;
 % Energy - Addition of nodal output by SPS 03/01/23
 E_nodal = (WcI*Phi).*Phi;
 E = sum(E_nodal);
+E_nodal = E_nodal'; %transpose so that output is same size as MIN_END_CONT.m
 end
