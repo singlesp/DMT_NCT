@@ -10,7 +10,7 @@ function [global_CE, regional_CE] = time_resolved_control_energy(Anorm, T, B, TS
     nparc = size(TS,1);
     
     % Preallocate matrices for speed
-    regional_CE = zeros(1,transitions,nparc); % Assuming the third dimension is 1001
+    regional_CE = zeros(1,transitions,nparc); 
     global_CE = zeros(1,transitions);
     
     %final and initial states are adjacent volumes
