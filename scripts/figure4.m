@@ -5,7 +5,7 @@ basedir = '~/Documents/GIT/DMT_NCT/';
 
 note='_gsr_volnorm'; %track different proc streams
 
-diffE_dom = readtable([basedir,'results/dominance/diffE',note,'_DominanceStats.csv']);
+diffE_dom = readtable([basedir,'results/dominance/diffE_continuous',note,'_DominanceStats.csv']);
 int_dom = readtable([basedir,'results/dominance/intcorr',note,'_DominanceStats.csv']);
 lz_dom = readtable([basedir,'results/dominance/LZcorr',note,'_DominanceStats.csv']);
 
