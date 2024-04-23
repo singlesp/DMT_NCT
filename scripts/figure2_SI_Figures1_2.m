@@ -478,3 +478,41 @@ xticks(linspace(0,28,15))
 xticklabels([{'-8'},{'-6'},{'-4'},{'-2'},{'0'},{'2'},{'4'},{'6'},{'8'},{'10'},{'12'},{'14'},{'16'},{'18'},{'20'}]);
 legend('∆Control Energy (fMRI)','∆Intensity (subjective ratings)')
 
+
+%% EEG direct comparison (SI)
+
+load([basedir,'data/RegressorLZInterpscrubbedConvolvedAvg.mat'])
+
+%baseline correct EEG first:
+bldmt = nanmean(RegDMT2(:,1:240),2);
+RegDMT2 = RegDMT2 - bldmt;
+RegPCB2 = RegPCB2 - nanmean(RegPCB2(:,1:240),2);
+
+RegDMT2 = RegDMT2(:,2:839);
+m_dmt_LZ = nanmean(RegDMT2);
+RegPCB2 = RegPCB2(:,2:839);
+m_pcb_LZ = nanmean(RegPCB2);
+
+% diff_ce = global_CE_dmt - global_CE_pcb;
+% diff_lz = RegDMT2 - RegPCB2;
+
+figure;
+[h,p]=ttest(RegDMT2,RegPCB2);
+post_inj = p(239:end);
+pfdr = mafdr(post_inj,'BH',1);
+fraction_sig_after_injection = sum(pfdr<0.05)/length(post_inj)
+pfdr = [ones(1,238) pfdr];
+idx = double(find(pfdr<0.05));
+hold on
+    plot(m_dmt_LZ,'black','LineWidth',1.5)
+    plot(m_pcb_LZ,'red','LineWidth',1.5)
+text(idx',repelem(.9*max(m_dmt_LZ),length(idx)),'*')
+tics = linspace(0,28,15);
+tics = tics*30;
+tics(end)=838;
+xticks(tics)
+xticklabels([{'-8'},{'-6'},{'-4'},{'-2'},{'0'},{'2'},{'4'},{'6'},{'8'},{'10'},{'12'},{'14'},{'16'},{'18'},{'20'}]);
+xlabel('Minutes')
+ylabel('EEG Signal Diversity (LZ)');
+title([{'Entropy time-series'};{'DMT vs PCB'}])
+legend('DMT signal diversity','PCB signal diversity')
