@@ -478,6 +478,27 @@ xticks(linspace(0,28,15))
 xticklabels([{'-8'},{'-6'},{'-4'},{'-2'},{'0'},{'2'},{'4'},{'6'},{'8'},{'10'},{'12'},{'14'},{'16'},{'18'},{'20'}]);
 legend('∆Control Energy (fMRI)','∆Intensity (subjective ratings)')
 
+%% correlation for post-injection period only (in-text)
+
+post_inj_diff_lz = m_diff_lz(239:end);
+[r,p] = corr(nanmean(diff_ce(:,239:end))',post_inj_diff_lz','type','Spearman')
+for i=1:nperms
+    idx1 = randperm(length(post_inj_diff_lz));
+    rr(i) = corr(nanmean(diff_ce(:,239:end))',post_inj_diff_lz(idx1)','type','Spearman');
+end
+pp = mean(r>=rr)
+
+
+data = mean(win_dmt_ce_global-win_pcb_ce_global);
+data_post = data(9:end);
+diff_int = m_dmt_int - m_pcb_int;
+diff_int_post = diff_int(9:end);
+[r,p] = corr(data_post',diff_int_post','type','Spearman')
+for i=1:nperms
+    idx1 = randperm(length(data_post));
+    rr(i) = corr(data_post(idx1)',diff_int_post','type','Spearman');
+end
+pp = mean(r>=rr)
 
 %% EEG direct comparison (SI)
 
