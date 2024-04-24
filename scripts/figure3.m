@@ -118,6 +118,8 @@ writetable(mydata, [basedir,input_filename,note, '.csv']);
 
 %% SI FIGURE correlation including subcortex, middle, correlate nodal CE with LZ
 
+load(fullfile([basedir,'results/regional_continuous_CE_DMT',note,'.mat']),'global_CE_dmt','regional_CE_dmt');
+
 load([basedir,'data/RegressorLZInterpscrubbedConvolvedAvg.mat'])
 
 m_dmt_LZ = nanmean(RegDMT2);
