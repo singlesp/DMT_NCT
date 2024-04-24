@@ -1,4 +1,6 @@
-%% dominance analysis - need to run min8_regional_CE_prepost_diff.m and time_resolved_CE_metrics.m first
+%%  dominance analysis - need to run <figure3.m> first to generate tables 
+%   + call python package in the terminal
+
 clear all; close all;
 
 basedir = '~/Documents/GIT/DMT_NCT/';
