@@ -126,7 +126,7 @@ m_dmt_LZ = nanmean(RegDMT2);
 m_dmt_LZ = m_dmt_LZ(2:839); %first frame is excluded from CE calcs
 
 
-[r_avg,p_avg]=corr(m_dmt_LZ',squeeze(mean(regional_CE_dmt,1)));
+[r_avg,p_avg]=corr(m_dmt_LZ',squeeze(mean(regional_CE_dmt,1)),'type','Spearman');
 
 
 [r2a_sub_middle,p2a_sub_middle] = corr(r_avg',receptor_vec,'type','Spearman')
@@ -244,7 +244,7 @@ end
 
 %% SI FIGURE correlation including subcortex, right
 
-[r_avg,p_avg]=corr(m_dmt_int',squeeze(mean(win_dmt_ce,1)));
+[r_avg,p_avg]=corr(m_dmt_int',squeeze(mean(win_dmt_ce,1)),'type','Spearman');
 
 [r2a_sub_right,p2a_sub_right] = corr(r_avg',receptor_vec,'type','Spearman')
 figure;
