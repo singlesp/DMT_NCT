@@ -2,21 +2,13 @@
 clear all; close all;
 
 basedir = '~/Documents/GIT/DMT_NCT/';
-load([basedir,'data/DMT_clean_mni_continuous_fullPreprocsch116.mat'],'ts_gsr')
-load([basedir,'data/Schaefer116_HCP_DTI_count.mat'], 'vol_normalized_sc')
-
-sc=vol_normalized_sc;
 
 note='_gsr_volnorm'; %track different proc streams
-TS = ts_gsr; %change depending on proc stream
 
 nsub=14;
 
 
-[nparc, ~] = size(TS{1,1});
-
-
-%% SI FIGURE 4, left
+%% corr with sub included (not reported in paper)
 
 load(fullfile([basedir,'results/regional_continuous_prepost_CE_PCB',note,'.mat']),'global_CE_pcb','regional_CE_pcb','global_CE_pcb_pre','regional_CE_pcb_pre');
 
@@ -119,6 +111,101 @@ writetable(mydata, [basedir,input_filename,note, '.csv']);
 %call from terminal:
 % python3 ~/Documents/GIT/DMT_NCT/fxns/dominance_analysis_al857.py ~/Documents/GIT/DMT_NCT/results/dominance/diffE_pcb_continuous_gsr_volnorm.csv  target 5 0 ~/Documents/GIT/DMT_NCT/results/dominance/diffE_pcb_continuous_gsr_volnorm
 
+%% regional CE vs LZ; corr w sub
+
+load([basedir,'data/RegressorLZInterpscrubbedConvolvedAvg.mat'])
+
+m_pcb_LZ = nanmean(RegPCB2);
+m_pcb_LZ = m_pcb_LZ(2:839); %first frame is excluded from CE calcs
+
+
+[r_avg,p_avg]=corr(m_pcb_LZ',squeeze(nanmean(regional_CE_pcb,1)),'type','Spearman');
+
+
+[r2a,p2a] = corr(r_avg',receptor_vec,'type','Spearman')
+figure;
+scatter(receptor_vec,r_avg'); lsline
+xlabel('2a density')
+ylabel('Rho: Nodal correlation b/w CE and LZ')
+text(-2,0.2,['rho = ',num2str(r2a),'; p = ',num2str(p2a)])
+
+%% FIGURE 3a, middle.  gummibrain from Keith Jamison-> https://github.com/kjamison/atlasblobs
+load(fullfile([basedir,'fxns/gummi_kj/atlasblobs_saved.mat']))
+
+%choose atlas
+whichatlas={'sch116'};
+
+%set colormap
+cmap = brewermap([],'*RdBu');
+
+data = r_avg';
+clim=[-0.6 0.6];
+ 
+f=figure;
+
+img=display_atlas_blobs(data,atlasblobs,...
+    'atlasname',whichatlas,...
+    'render',true,...
+    'backgroundimage',true,...
+    'crop',true,...
+    'colormap',cmap,...
+    'clim', clim,...
+    'backgroundimage','none',...
+    'backgroundcolor',[1 1 1]);%,...
+%         'roimask',roimask); %last argmument optional, depends if you need to remove roi's
+
+imshow(img);
+c=colorbar('SouthOutside', 'fontsize', 16);
+c.Label.String='∆CE: (post - pre)/pre';
+set(gca,'colormap',cmap);
+caxis(clim);
+
+%% FIGURE 3c, middle above correlation without subcortex and using spin test
+load([basedir,'fxns/SpinTests/rotated_maps/rotated_Schaefer_100.mat'])
+
+
+r_avg=r_avg(1:100);
+rec_nosub = receptor_vec(1:100);
+
+[r2a,p2a] = corr(r_avg',rec_nosub,'type','Spearman')
+
+p_spin_vasa_mid = perm_sphere_p_al857(r_avg',rec_nosub,perm_id,'Spearman')
+
+figure;
+scatter(rec_nosub,r_avg'); lsline
+xlabel('2a density')
+ylabel('Rho: Nodal correlation b/w CE and LZ')
+text(-.7,0.1,['rho = ',num2str(r2a),'; p = ',num2str(p_spin_vasa_mid)])
+
+%% dominance analysis - see figure4.m for plotting these data
+load([basedir,'data/5HTvecs_sch116.mat'])
+
+v2a=mean5HT2A_sch116;
+
+v1a=mean5HT1A_sch116;
+
+v1b=mean5HT1B_sch116;
+
+v4=mean5HT4_sch116;
+
+vT=mean5HTT_sch116;
+
+allv = [v2a v1a v1b v4 vT];
+
+[r_avg,p_avg]=corr(m_pcb_LZ',squeeze(nanmean(regional_CE_pcb,1)));
+target = r_avg';
+
+varnames=[{'HT2a'},{'HT1a'},{'HT1b'},{'HT4'},{'HTT'},{'target'}];
+
+mydata = table(v2a,v1a,v1b,v4,vT,target,'VariableNames',varnames);
+
+input_filename = 'results/dominance/LZcorr_pcb';
+writetable(mydata, [basedir,input_filename,note, '.csv']);
+
+%call from terminal:
+% python3 ~/Documents/GIT/DMT_NCT/fxns/dominance_analysis_al857.py ~/Documents/GIT/DMT_NCT/results/dominance/LZcorr_pcb_gsr_volnorm.csv  target 5 0 ~/Documents/GIT/DMT_NCT/results/dominance/LZcorr_pcb_gsr_volnorm
+
+
 %% regional CE vs intensity
 
 load(fullfile([basedir,'results/regional_continuous_CE_PCB',note,'.mat']),'global_CE_pcb','regional_CE_pcb');
@@ -149,9 +236,10 @@ for i=1:length(m_pcb_int)
     k=k+window;
 end
 
-[r_avg,p_avg]=corr(m_pcb_int',squeeze(mean(win_pcb_ce,1)));
+%% corr with sub
 
-%% SI Figure 4, right
+[r_avg,p_avg]=corr(m_pcb_int',squeeze(mean(win_pcb_ce,1)),'type','Spearman');
+
 [r2a,p2a] = corr(r_avg',receptor_vec,'type','Spearman')
 figure;
 scatter(receptor_vec,r_avg'); lsline
@@ -239,99 +327,6 @@ writetable(mydata, [basedir,input_filename,note, '.csv']);
 % python3 ~/Documents/GIT/DMT_NCT/fxns/dominance_analysis_al857.py ~/Documents/GIT/DMT_NCT/results/dominance/intcorr_pcb_gsr_volnorm.csv  target 5 0 ~/Documents/GIT/DMT_NCT/results/dominance/intcorr_pcb_gsr_volnorm
 
 
-%% SI FIGURE 4, middle correlate nodal CE with LZ
-
-load([basedir,'data/RegressorLZInterpscrubbedConvolvedAvg.mat'])
-
-m_pcb_LZ = nanmean(RegPCB2);
-m_pcb_LZ = m_pcb_LZ(2:839); %first frame is excluded from CE calcs
-
-
-[r_avg,p_avg]=corr(m_pcb_LZ',squeeze(nanmean(regional_CE_pcb,1)));
-
-
-[r2a,p2a] = corr(r_avg',receptor_vec,'type','Spearman')
-figure;
-scatter(receptor_vec,r_avg'); lsline
-xlabel('2a density')
-ylabel('Rho: Nodal correlation b/w CE and LZ')
-text(-2,0.2,['rho = ',num2str(r2a),'; p = ',num2str(p2a)])
-
-%% FIGURE 3a, middle.  gummibrain from Keith Jamison-> https://github.com/kjamison/atlasblobs
-load(fullfile([basedir,'fxns/gummi_kj/atlasblobs_saved.mat']))
-
-%choose atlas
-whichatlas={'sch116'};
-
-%set colormap
-cmap = brewermap([],'*RdBu');
-
-data = r_avg';
-clim=[-0.6 0.6];
- 
-f=figure;
-
-img=display_atlas_blobs(data,atlasblobs,...
-    'atlasname',whichatlas,...
-    'render',true,...
-    'backgroundimage',true,...
-    'crop',true,...
-    'colormap',cmap,...
-    'clim', clim,...
-    'backgroundimage','none',...
-    'backgroundcolor',[1 1 1]);%,...
-%         'roimask',roimask); %last argmument optional, depends if you need to remove roi's
-
-imshow(img);
-c=colorbar('SouthOutside', 'fontsize', 16);
-c.Label.String='∆CE: (post - pre)/pre';
-set(gca,'colormap',cmap);
-caxis(clim);
-
-%% FIGURE 3c, middle above correlation without subcortex and using spin test
-load([basedir,'fxns/SpinTests/rotated_maps/rotated_Schaefer_100.mat'])
-
-
-r_avg=r_avg(1:100);
-rec_nosub = receptor_vec(1:100);
-
-[r2a,p2a] = corr(r_avg',rec_nosub,'type','Spearman')
-
-p_spin_vasa_mid = perm_sphere_p_al857(r_avg',rec_nosub,perm_id,'Spearman')
-
-figure;
-scatter(rec_nosub,r_avg'); lsline
-xlabel('2a density')
-ylabel('Rho: Nodal correlation b/w CE and LZ')
-text(-.7,0.1,['rho = ',num2str(r2a),'; p = ',num2str(p_spin_vasa_mid)])
-
-%% dominance analysis - see figure4.m for plotting these data
-load([basedir,'data/5HTvecs_sch116.mat'])
-
-v2a=mean5HT2A_sch116;
-
-v1a=mean5HT1A_sch116;
-
-v1b=mean5HT1B_sch116;
-
-v4=mean5HT4_sch116;
-
-vT=mean5HTT_sch116;
-
-allv = [v2a v1a v1b v4 vT];
-
-[r_avg,p_avg]=corr(m_pcb_LZ',squeeze(nanmean(regional_CE_pcb,1)));
-target = r_avg';
-
-varnames=[{'HT2a'},{'HT1a'},{'HT1b'},{'HT4'},{'HTT'},{'target'}];
-
-mydata = table(v2a,v1a,v1b,v4,vT,target,'VariableNames',varnames);
-
-input_filename = 'results/dominance/LZcorr_pcb';
-writetable(mydata, [basedir,input_filename,note, '.csv']);
-
-%call from terminal:
-% python3 ~/Documents/GIT/DMT_NCT/fxns/dominance_analysis_al857.py ~/Documents/GIT/DMT_NCT/results/dominance/LZcorr_pcb_gsr_volnorm.csv  target 5 0 ~/Documents/GIT/DMT_NCT/results/dominance/LZcorr_pcb_gsr_volnorm
 
 
 %% correct
