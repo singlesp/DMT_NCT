@@ -575,7 +575,7 @@ for i=1:nperms
     idx1 = randperm(length(post_inj_diff_lz));
     rr(i) = corr(nanmean(diff_ce(:,239:end))',post_inj_diff_lz(idx1)','type','Spearman');
 end
-pp = mean(r>=rr)
+pp1 = mean(r>=rr);
 
 
 data = mean(win_dmt_ce_global-win_pcb_ce_global);
@@ -587,7 +587,9 @@ for i=1:nperms
     idx1 = randperm(length(data_post));
     rr(i) = corr(data_post(idx1)',diff_int_post','type','Spearman');
 end
-pp = mean(r>=rr)
+pp2 = mean(r>=rr);
+
+pfdr = mafdr([pp1 pp2],'BH',1)
 
 %% EEG direct comparison (SI)
 
