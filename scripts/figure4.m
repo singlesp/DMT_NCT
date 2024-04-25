@@ -34,7 +34,8 @@ spider_plot(P,...
 % Legend properties
 legend('control energy', 'corr(CE, intensity)', 'corr(CE, LZ)', 'Location', 'southoutside');
 
-%% PLACEBO Dom
+%%  dominance analysis for placebo (SI) - need to run <figure3_placeboSI.m> 
+%   first to generate tables + call python package in the terminal
 
 clear all;
 
