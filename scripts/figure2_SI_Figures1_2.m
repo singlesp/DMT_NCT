@@ -528,18 +528,18 @@ for i=1:nperms
     idx1 = randperm(length(m_dmt_LZ));
     rr(i) = corr(nanmean(diff_ce)',m_diff_lz(idx1)','type','Spearman');
 end
-pp = mean(r>=rr)
-text(400,-100,['R = ',num2str(r),'; p = ',num2str(pp)],'FontSize',12)
+pp1 = mean(r>=rr)
+text(400,-100,['R = ',num2str(r),'; p = ',num2str(pp1)],'FontSize',12)
 title([{'Group-level continuous control energy vs signal diversity'};{'(DMT - PCB)'}])
 xlabel('Minutes')
 tics = linspace(0,28,15);
 tics = tics*30;
 tics(end)=838;
+xlim([0 838])
 xticks(tics)
 xticklabels([{'-8'},{'-6'},{'-4'},{'-2'},{'0'},{'2'},{'4'},{'6'},{'8'},{'10'},{'12'},{'14'},{'16'},{'18'},{'20'}]);
 legend('∆Control Energy (fMRI)','∆Limpel-Ziv Complexity (EEG)')
 
-clear rr pp
 
 subplot(2,1,2)
 data = mean(win_dmt_ce_global-win_pcb_ce_global);
@@ -549,20 +549,23 @@ for i=1:nperms
     idx1 = randperm(length(data));
     rr(i) = corr(data(idx1)',diff_int','type','Spearman');
 end
-pp = mean(r>=rr)
+pp2 = mean(r>=rr)
 title([{'Group-level windowed control energy vs drug intensity'};{'(DMT - PCB)'}])
 hold on
     plot(data,'bo--','LineWidth',1.5)
-    text(18,-30,['R = ',num2str(r),'; p = ',num2str(pp)],'FontSize',12)
+    text(18,-30,['R = ',num2str(r),'; p = ',num2str(pp2)],'FontSize',12)
     ylabel('∆Control Energy')
     yyaxis right
     plot(diff_int,'yellowo--','LineWidth',1.5)
 ylabel('∆Intensity Ratings')
 ylim([0 10])
 xlabel('Minutes')
+xlim([0 28])
 xticks(linspace(0,28,15))
 xticklabels([{'-8'},{'-6'},{'-4'},{'-2'},{'0'},{'2'},{'4'},{'6'},{'8'},{'10'},{'12'},{'14'},{'16'},{'18'},{'20'}]);
 legend('∆Control Energy (fMRI)','∆Intensity (subjective ratings)')
+
+pfdr = mafdr([pp1 pp2],'BH',1)
 
 %% correlation for post-injection period only (in-text)
 
