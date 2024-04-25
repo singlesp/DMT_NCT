@@ -233,7 +233,7 @@ xlabel('Minutes')
 xlim([0 838])
 
 
-%% SI FIGURE 2 summarize network comparison
+%% SI FIGURE summarize network comparison
 [h,p,~,t]=ttest(global_CE_dmt,global_CE_pcb);
 post_inj_glob = t.tstat(239:end);
 post_inj1_glob = post_inj_glob(1:300);
@@ -313,6 +313,7 @@ tics(end)=838;
 xticks(tics)
 xticklabels([{'-8'},{'-6'},{'-4'},{'-2'},{'0'},{'2'},{'4'},{'6'},{'8'},{'10'},{'12'},{'14'},{'16'},{'18'},{'20'}]);
 xlabel('Minutes')
+xlim([0 838])
 ylabel('Control Energy');
 title([{'Group-level continuous control energy'};{'DMT vs PCB'}])
 legend('DMT Control Energy','PCB Control Energy')
@@ -352,11 +353,11 @@ for i=1:length(m_dmt_int)
 end
 
 
-%% CE vs intensity for each condition
+%% CE vs intensity for each condition (SI)
 
 nperms=10000;
 
-clear rr pp
+clear rr pp*
 
 figure;
 subplot(2,1,1)
@@ -367,11 +368,11 @@ for i=1:nperms
 %     idx2 = randperm(length(data));
     rr(i) = corr(data(idx1)',m_dmt_int','type','Spearman');
 end
-pp = mean(r>rr);
+pp1 = mean(r>rr);
 title([{'Energy/Intensity Time-series'};{'DMT continuous data (group means)'}])
 hold on
     plot(data,'bo--','LineWidth',2)
-    text(14,160,['R = ',num2str(r),'; p = ',num2str(pp)],'FontSize',12)
+    text(14,160,['R = ',num2str(r),'; p = ',num2str(pp1)],'FontSize',12)
     ylabel('E')
 %     ylim([250 950])
     ylim([50 180])
@@ -380,23 +381,24 @@ hold on
 ylabel('Intensity')
 ylim([0 10])
 xlabel('Minutes')
+xlim([0 28])
 xticks(linspace(0,28,15))
 xticklabels([{'-8'},{'-6'},{'-4'},{'-2'},{'0'},{'2'},{'4'},{'6'},{'8'},{'10'},{'12'},{'14'},{'16'},{'18'},{'20'}]);
 legend('Energy','Intensity')
 
 subplot(2,1,2)
 data=mean(win_pcb_ce_global);
-[r,p]=corr(data',m_pcb_int','type','Spearman')
+[r,p]=corr(data',m_pcb_int','type','Spearman');
 for i=1:nperms
     idx1 = randperm(length(data));
 %     idx2 = randperm(length(data));
     rr(i) = corr(data(idx1)',m_pcb_int','type','Spearman');
 end
-pp = mean(r>rr);
+pp2 = mean(r>rr);
 title([{'Energy/Intensity Time-series'};{'PCB continuous data (group means)'}])
 hold on
     plot(data,'ro--','LineWidth',2)
-    text(14,160,['R = ',num2str(r),'; p = ',num2str(pp)],'FontSize',12)
+    text(14,160,['R = ',num2str(r),'; p = ',num2str(pp2)],'FontSize',12)
     ylabel('E')
 %     ylim([250 950])
     ylim([50 180])
@@ -405,9 +407,13 @@ hold on
 ylabel('Intensity')
 ylim([0 10])
 xlabel('Minutes')
+xlim([0 28])
 xticks(linspace(0,28,15))
 xticklabels([{'-8'},{'-6'},{'-4'},{'-2'},{'0'},{'2'},{'4'},{'6'},{'8'},{'10'},{'12'},{'14'},{'16'},{'18'},{'20'}]);
 legend('Energy','Intensity')
+
+% correct
+pfdr = mafdr([pp1 pp2],'BH',1)
 
 %% CE vs LZ for each condition
 
