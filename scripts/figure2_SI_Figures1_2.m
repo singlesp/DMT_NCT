@@ -1,4 +1,4 @@
-%% plot global and network level CE - must run time_resolved_CE_metrics.m first
+%% plot global and network level CE - must run <gen_time_resolved_ce.m> first
 
 clear all; close all;
 
@@ -15,7 +15,7 @@ load([basedir,'data/sch116_to_yeo.csv'])
 network7labels=sch116_to_yeo;
 networks = [{'VIS'},{'SOM'},{'DAT'},{'VAT'},{'LIM'},{'FPN'},{'DMN'},{'SUB'}];
 
-%% get network level CE's
+%% get network level CE's for SI
 
 vis_CE = sum(regional_CE_dmt(:,:,network7labels==1),3);
 som_CE = sum(regional_CE_dmt(:,:,network7labels==2),3);
@@ -62,7 +62,7 @@ hold on
     plot(mean(sub_CE_pcb)','LineWidth',2)
 legend(networks);
 
-%% SI FIGURE 1 
+%% SI FIGURE Network level
 
 tics = linspace(0,28,15);
 tics = tics*30;
@@ -86,6 +86,7 @@ legend('DMT','PCB')
 xticks(tics)
 xticklabels([{'-8'},{'-6'},{'-4'},{'-2'},{'0'},{'2'},{'4'},{'6'},{'8'},{'10'},{'12'},{'14'},{'16'},{'18'},{'20'}]);
 xlabel('Minutes')
+xlim([0 838])
 
 
 subplot(5,2,3)
@@ -100,10 +101,10 @@ hold on
     plot(mean(vis_CE_pcb)','LineWidth',2)
 text(idx',repelem(.9*max(mean(vis_CE_pcb)),length(idx)),'*')
 title(networks{1})
-% legend('DMT','PCB')
 xticks(tics)
 xticklabels([{'-8'},{'-6'},{'-4'},{'-2'},{'0'},{'2'},{'4'},{'6'},{'8'},{'10'},{'12'},{'14'},{'16'},{'18'},{'20'}]);
 xlabel('Minutes')
+xlim([0 838])
 
 
 subplot(5,2,4)
@@ -118,10 +119,10 @@ hold on
     plot(mean(som_CE_pcb)','LineWidth',2)
 text(idx',repelem(.9*max(mean(som_CE_pcb)),length(idx)),'*')
 title(networks{2})
-% legend('DMT','PCB')
 xticks(tics)
 xticklabels([{'-8'},{'-6'},{'-4'},{'-2'},{'0'},{'2'},{'4'},{'6'},{'8'},{'10'},{'12'},{'14'},{'16'},{'18'},{'20'}]);
 xlabel('Minutes')
+xlim([0 838])
 
 
 subplot(5,2,5)
@@ -136,10 +137,10 @@ hold on
     plot(mean(dat_CE_pcb)','LineWidth',2)
 text(idx',repelem(.9*max(mean(dat_CE_pcb)),length(idx)),'*')
 title(networks{3})
-% legend('DMT','PCB')
 xticks(tics)
 xticklabels([{'-8'},{'-6'},{'-4'},{'-2'},{'0'},{'2'},{'4'},{'6'},{'8'},{'10'},{'12'},{'14'},{'16'},{'18'},{'20'}]);
 xlabel('Minutes')
+xlim([0 838])
 
 
 subplot(5,2,6)
@@ -154,10 +155,10 @@ hold on
     plot(mean(vat_CE_pcb)','LineWidth',2)
 text(idx',repelem(.9*max(mean(vat_CE_pcb)),length(idx)),'*')
 title(networks{4})
-% legend('DMT','PCB')
 xticks(tics)
 xticklabels([{'-8'},{'-6'},{'-4'},{'-2'},{'0'},{'2'},{'4'},{'6'},{'8'},{'10'},{'12'},{'14'},{'16'},{'18'},{'20'}]);
 xlabel('Minutes')
+xlim([0 838])
 
 
 subplot(5,2,7)
@@ -172,10 +173,10 @@ hold on
     plot(mean(lim_CE_pcb)','LineWidth',2)
 text(idx',repelem(.9*max(mean(lim_CE_pcb)),length(idx)),'*')
 title(networks{5})
-% legend('DMT','PCB')
 xticks(tics)
 xticklabels([{'-8'},{'-6'},{'-4'},{'-2'},{'0'},{'2'},{'4'},{'6'},{'8'},{'10'},{'12'},{'14'},{'16'},{'18'},{'20'}]);
 xlabel('Minutes')
+xlim([0 838])
 
 
 subplot(5,2,8)
@@ -190,10 +191,10 @@ hold on
     plot(mean(fpn_CE_pcb)','LineWidth',2)
 text(idx',repelem(.9*max(mean(fpn_CE_pcb)),length(idx)),'*')
 title(networks{6})
-% legend('DMT','PCB')
 xticks(tics)
 xticklabels([{'-8'},{'-6'},{'-4'},{'-2'},{'0'},{'2'},{'4'},{'6'},{'8'},{'10'},{'12'},{'14'},{'16'},{'18'},{'20'}]);
 xlabel('Minutes')
+xlim([0 838])
 
 
 subplot(5,2,9)
@@ -208,10 +209,10 @@ hold on
     plot(mean(dmn_CE_pcb)','LineWidth',2)
 text(idx',repelem(.9*max(mean(dmn_CE_pcb)),length(idx)),'*')
 title(networks{7})
-% legend('DMT','PCB')
 xticks(tics)
 xticklabels([{'-8'},{'-6'},{'-4'},{'-2'},{'0'},{'2'},{'4'},{'6'},{'8'},{'10'},{'12'},{'14'},{'16'},{'18'},{'20'}]);
 xlabel('Minutes')
+xlim([0 838])
 
 
 subplot(5,2,10)
@@ -226,10 +227,10 @@ hold on
     plot(mean(sub_CE_pcb)','LineWidth',2)
 text(idx',repelem(.9*max(mean(sub_CE_pcb)),length(idx)),'*')
 title('SUB')
-% legend('DMT','PCB')
 xticks(tics)
 xticklabels([{'-8'},{'-6'},{'-4'},{'-2'},{'0'},{'2'},{'4'},{'6'},{'8'},{'10'},{'12'},{'14'},{'16'},{'18'},{'20'}]);
 xlabel('Minutes')
+xlim([0 838])
 
 
 %% SI FIGURE 2 summarize network comparison
