@@ -591,6 +591,58 @@ pp2 = mean(r>=rr);
 
 pfdr = mafdr([pp1 pp2],'BH',1)
 
+%% in-text correlation for full scan: partial corr w/ FD covar
+
+load([basedir,'data/FDlong.mat'])
+
+m_dmt_fd = mean(FDDMT(2:839,:)');
+m_pcb_fd = mean(FDPCB(2:839,:)');
+diff_fd = m_dmt_fd - m_pcb_fd;
+
+% window the fd for correlation with intensity
+TR=2; window=60/TR;
+
+win_dmt_fd=[];
+win_pcb_fd=[];
+
+%get avg energy for each min
+k=1; 
+for i=1:length(m_dmt_int)
+    if i==length(m_dmt_int)
+        win_dmt_fd(:,i) = mean(FDDMT(k:end,:)',2);
+        win_pcb_fd(:,i) = mean(FDPCB(k:end,:)',2);
+    else
+        win_dmt_fd(:,i) = mean(FDDMT(k:k+window,:)',2);
+        win_pcb_fd(:,i) = mean(FDPCB(k:k+window,:)',2);
+
+    end
+    k=k+window;
+end
+
+% partial spearman corr bw energy diff and LZ
+resid = regress_confound([tiedrank(nanmean(diff_ce)') tiedrank(m_diff_lz')],tiedrank(diff_fd'),'fittype','lsq','addconstant',true);
+[r,p] = corr(resid(:,1),resid(:,2))
+for i=1:nperms
+    idx1 = randperm(length(m_dmt_LZ));
+    rr(i) = corr(resid(:,1),resid(idx1,2));
+end
+pp1 = mean(r>=rr)
+
+% partial spearman for bw energy diff and intensity 
+m_win_ce_diff = mean(win_dmt_ce_global-win_pcb_ce_global);
+m_win_fd_diff = mean(win_dmt_fd-win_pcb_fd);
+diff_int = m_dmt_int - m_pcb_int;
+
+resid = regress_confound([tiedrank(m_win_ce_diff') tiedrank(diff_int')],tiedrank(m_win_fd_diff'),'fittype','lsq','addconstant',true);
+[r,p] = corr(resid(:,1),resid(:,2))
+for i=1:nperms
+    idx1 = randperm(length(diff_int));
+    rr(i) = corr(resid(:,1),resid(idx1,2));
+end
+pp2 = mean(r>=rr)
+
+pfdr = mafdr([pp1 pp2],'BH',1)
+
 %% EEG direct comparison (SI)
 
 load([basedir,'data/RegressorLZInterpscrubbedConvolvedAvg.mat'])
