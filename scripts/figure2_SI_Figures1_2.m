@@ -417,6 +417,8 @@ pfdr = mafdr([pp1 pp2],'BH',1)
 
 %% CE vs LZ for each condition
 
+clear rr pp*
+
 load([basedir,'data/RegressorLZInterpscrubbedConvolvedAvg.mat'])
 
 %baseline correct EEG first:
@@ -443,13 +445,13 @@ hold on
     plot(m_dmt_LZ','green','LineWidth',1.5)
     ylabel('EEG Signal Diversity (LZ)')
     yyaxis left
-[r,p] = corr(m_dmt_ce',m_dmt_LZ','type','Spearman')
+[r,p] = corr(m_dmt_ce',m_dmt_LZ','type','Spearman');
 for i=1:nperms
     idx1 = randperm(length(m_dmt_LZ));
     rr(i) = corr(m_dmt_ce',m_dmt_LZ(idx1)','type','Spearman');
 end
-pp = mean(r>=rr)
-text(350,100,['R = ',num2str(r),'; p = ',num2str(pp)],'FontSize',12)
+pp1 = mean(r>=rr)
+text(350,100,['R = ',num2str(r),'; p = ',num2str(pp1)],'FontSize',12)
 title([{'DMT continuous control energy vs signal diversity'}])
 xlabel('Minutes')
 xlim([0 838])
@@ -460,7 +462,6 @@ xticks(tics)
 xticklabels([{'-8'},{'-6'},{'-4'},{'-2'},{'0'},{'2'},{'4'},{'6'},{'8'},{'10'},{'12'},{'14'},{'16'},{'18'},{'20'}]);
 legend('Control Energy (fMRI)','Limpel-Ziv Complexity (EEG)')
 
-clear rr pp
 
 subplot(2,1,2)
 hold on
@@ -471,13 +472,13 @@ hold on
     plot(m_pcb_LZ','green','LineWidth',1.5)
     ylabel('EEG Signal Diversity (LZ)')
     yyaxis left
-[r,p] = corr(m_pcb_ce',m_pcb_LZ','type','Spearman')
+[r,p] = corr(m_pcb_ce',m_pcb_LZ','type','Spearman');
 for i=1:nperms
     idx1 = randperm(length(m_pcb_LZ));
     rr(i) = corr(m_pcb_ce',m_pcb_LZ(idx1)','type','Spearman');
 end
-pp = mean(r>=rr)
-text(300,200,['R = ',num2str(r),'; p = ',num2str(pp)],'FontSize',12)
+pp2 = mean(r>=rr)
+text(300,200,['R = ',num2str(r),'; p = ',num2str(pp2)],'FontSize',12)
 title([{'PCB continuous control energy vs signal diversity'}])
 xlabel('Minutes')
 xlim([0 838])
@@ -488,7 +489,10 @@ xticks(tics)
 xticklabels([{'-8'},{'-6'},{'-4'},{'-2'},{'0'},{'2'},{'4'},{'6'},{'8'},{'10'},{'12'},{'14'},{'16'},{'18'},{'20'}]);
 legend('Control Energy (fMRI)','Limpel-Ziv Complexity (EEG)')
 
-clear rr pp
+% correct
+pfdr = mafdr([pp1 pp2],'BH',1)
+
+clear rr pp*
 
 %% FIGURE 2B and 2C
 
