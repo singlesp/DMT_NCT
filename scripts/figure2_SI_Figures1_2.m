@@ -4,6 +4,8 @@ clear all; close all;
 
 nsub=14;
 
+nperms=10000;
+
 basedir = '~/Documents/GIT/DMT_NCT/';
 
 note='_gsr_volnorm'; %track different proc streams
@@ -355,8 +357,6 @@ end
 
 %% CE vs intensity for each condition (SI)
 
-nperms=10000;
-
 clear rr pp*
 
 figure;
@@ -368,11 +368,11 @@ for i=1:nperms
 %     idx2 = randperm(length(data));
     rr(i) = corr(data(idx1)',m_dmt_int','type','Spearman');
 end
-pp1 = mean(r>rr);
+pp1_int = mean(r>rr);
 title([{'Energy/Intensity Time-series'};{'DMT continuous data (group means)'}])
 hold on
     plot(data,'bo--','LineWidth',2)
-    text(14,160,['R = ',num2str(r),'; p = ',num2str(pp1)],'FontSize',12)
+    text(14,160,['R = ',num2str(r),'; p = ',num2str(pp1_int)],'FontSize',12)
     ylabel('E')
 %     ylim([250 950])
     ylim([50 180])
@@ -394,11 +394,11 @@ for i=1:nperms
 %     idx2 = randperm(length(data));
     rr(i) = corr(data(idx1)',m_pcb_int','type','Spearman');
 end
-pp2 = mean(r>rr);
+pp2_int = mean(r>rr);
 title([{'Energy/Intensity Time-series'};{'PCB continuous data (group means)'}])
 hold on
     plot(data,'ro--','LineWidth',2)
-    text(14,160,['R = ',num2str(r),'; p = ',num2str(pp2)],'FontSize',12)
+    text(14,160,['R = ',num2str(r),'; p = ',num2str(pp2_int)],'FontSize',12)
     ylabel('E')
 %     ylim([250 950])
     ylim([50 180])
@@ -412,12 +412,7 @@ xticks(linspace(0,28,15))
 xticklabels([{'-8'},{'-6'},{'-4'},{'-2'},{'0'},{'2'},{'4'},{'6'},{'8'},{'10'},{'12'},{'14'},{'16'},{'18'},{'20'}]);
 legend('Energy','Intensity')
 
-% correct
-pfdr = mafdr([pp1 pp2],'BH',1)
-
 %% CE vs LZ for each condition
-
-clear rr pp*
 
 load([basedir,'data/RegressorLZInterpscrubbedConvolvedAvg.mat'])
 
@@ -450,8 +445,8 @@ for i=1:nperms
     idx1 = randperm(length(m_dmt_LZ));
     rr(i) = corr(m_dmt_ce',m_dmt_LZ(idx1)','type','Spearman');
 end
-pp1 = mean(r>=rr)
-text(350,100,['R = ',num2str(r),'; p = ',num2str(pp1)],'FontSize',12)
+pp1_eg = mean(r>=rr)
+text(350,100,['R = ',num2str(r),'; p = ',num2str(pp1_eg)],'FontSize',12)
 title([{'DMT continuous control energy vs signal diversity'}])
 xlabel('Minutes')
 xlim([0 838])
@@ -477,8 +472,8 @@ for i=1:nperms
     idx1 = randperm(length(m_pcb_LZ));
     rr(i) = corr(m_pcb_ce',m_pcb_LZ(idx1)','type','Spearman');
 end
-pp2 = mean(r>=rr)
-text(300,200,['R = ',num2str(r),'; p = ',num2str(pp2)],'FontSize',12)
+pp2_eg = mean(r>=rr)
+text(300,200,['R = ',num2str(r),'; p = ',num2str(pp2_eg)],'FontSize',12)
 title([{'PCB continuous control energy vs signal diversity'}])
 xlabel('Minutes')
 xlim([0 838])
@@ -489,12 +484,14 @@ xticks(tics)
 xticklabels([{'-8'},{'-6'},{'-4'},{'-2'},{'0'},{'2'},{'4'},{'6'},{'8'},{'10'},{'12'},{'14'},{'16'},{'18'},{'20'}]);
 legend('Control Energy (fMRI)','Limpel-Ziv Complexity (EEG)')
 
-% correct
-pfdr = mafdr([pp1 pp2],'BH',1)
+%% correct global single condition SI correlations
 
-clear rr pp*
+pfdr = mafdr([pp1_int pp2_int pp1_eg pp2_eg],'BH',1)
+
 
 %% FIGURE 2B and 2C
+
+clear rr pp*
 
 load([basedir,'data/RegressorLZInterpscrubbedConvolvedAvg.mat'])
 
