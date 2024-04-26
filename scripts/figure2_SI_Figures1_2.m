@@ -565,7 +565,6 @@ xticks(linspace(0,28,15))
 xticklabels([{'-8'},{'-6'},{'-4'},{'-2'},{'0'},{'2'},{'4'},{'6'},{'8'},{'10'},{'12'},{'14'},{'16'},{'18'},{'20'}]);
 legend('∆Control Energy (fMRI)','∆Intensity (subjective ratings)')
 
-pfdr = mafdr([pp1 pp2],'BH',1)
 
 %% correlation for post-injection period only (in-text)
 
@@ -575,7 +574,7 @@ for i=1:nperms
     idx1 = randperm(length(post_inj_diff_lz));
     rr(i) = corr(nanmean(diff_ce(:,239:end))',post_inj_diff_lz(idx1)','type','Spearman');
 end
-pp1 = mean(r>=rr);
+pp1_post = mean(r>=rr);
 
 
 data = mean(win_dmt_ce_global-win_pcb_ce_global);
@@ -587,9 +586,7 @@ for i=1:nperms
     idx1 = randperm(length(data_post));
     rr(i) = corr(data_post(idx1)',diff_int_post','type','Spearman');
 end
-pp2 = mean(r>=rr);
-
-pfdr = mafdr([pp1 pp2],'BH',1)
+pp2_post = mean(r>=rr);
 
 %% in-text correlation for full scan: partial corr w/ FD covar
 
@@ -626,7 +623,7 @@ for i=1:nperms
     idx1 = randperm(length(m_dmt_LZ));
     rr(i) = corr(resid(:,1),resid(idx1,2));
 end
-pp1 = mean(r>=rr)
+pp1_fd = mean(r>=rr)
 
 % partial spearman for bw energy diff and intensity 
 m_win_ce_diff = mean(win_dmt_ce_global-win_pcb_ce_global);
@@ -639,9 +636,11 @@ for i=1:nperms
     idx1 = randperm(length(diff_int));
     rr(i) = corr(resid(:,1),resid(idx1,2));
 end
-pp2 = mean(r>=rr)
+pp2_fd = mean(r>=rr)
 
-pfdr = mafdr([pp1 pp2],'BH',1)
+%% correction of main text global correlations
+
+pfdr = mafdr([pp1 pp2 pp1_post pp2_post pp1_fd pp2_fd],'BH',1)
 
 %% EEG direct comparison (SI)
 
