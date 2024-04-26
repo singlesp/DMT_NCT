@@ -676,3 +676,129 @@ xlabel('Minutes')
 ylabel('EEG Signal Diversity (LZ)');
 title([{'Entropy time-series'};{'DMT vs PCB'}])
 legend('DMT signal diversity','PCB signal diversity')
+
+%% subject level correlations (SI)
+
+
+
+
+
+figure;
+for i=1:nsub
+    subplot(7,2,i)
+    hold on
+    plot(global_CE_dmt(i,:)','blue','LineWidth',1.5)
+    
+    ylabel('CE')
+    yyaxis right
+    plot(RegDMT2(i,:)','green','LineWidth',1.5)
+    ylabel('LZ')
+    yyaxis left
+    [r,p] = corr(global_CE_dmt(i,:)',RegDMT2(i,:)','type','Spearman');
+    for perm=1:nperms
+        idx1 = randperm(length(diff_lz));
+        rr(perm) = corr(global_CE_dmt(i,:)',RegDMT2(i,idx1)','type','Spearman');
+    end
+    pp(i) = mean(r>=rr)
+    text(400,200,['R = ',num2str(r),'; p = ',num2str(pp(i))],'FontSize',12)
+%     title([{'Group-level continuous control energy vs signal diversity'};{'(DMT - PCB)'}])
+    xlabel('Minutes')
+    tics = linspace(0,28,15);
+    tics = tics*30;
+    tics(end)=838;
+    xlim([0 838])
+    xticks(tics)
+    xticklabels([{'-8'},{'-6'},{'-4'},{'-2'},{'0'},{'2'},{'4'},{'6'},{'8'},{'10'},{'12'},{'14'},{'16'},{'18'},{'20'}]);
+%     legend('∆Control Energy (fMRI)','∆Limpel-Ziv Complexity (EEG)')
+end
+
+pfdr = mafdr(pp,'BH',1)
+
+%%
+figure;
+for i=1:nsub
+    subplot(7,2,i)
+    hold on
+    plot(global_CE_pcb(i,:)','blue','LineWidth',1.5)
+    
+    ylabel('CE')
+    yyaxis right
+    plot(RegPCB2(i,:)','green','LineWidth',1.5)
+    ylabel('LZ')
+    yyaxis left
+    [r,p] = corr(global_CE_pcb(i,:)',RegPCB2(i,:)','type','Spearman','rows','complete');
+    for perm=1:nperms
+        idx1 = randperm(length(diff_lz));
+        rr(perm) = corr(global_CE_pcb(i,:)',RegPCB2(i,idx1)','type','Spearman','rows','complete');
+    end
+    pp(i) = mean(r>=rr);
+    text(400,200,['R = ',num2str(r),'; p = ',num2str(pp(i))],'FontSize',12)
+%     title([{'Group-level continuous control energy vs signal diversity'};{'(DMT - PCB)'}])
+    xlabel('Minutes')
+    tics = linspace(0,28,15);
+    tics = tics*30;
+    tics(end)=838;
+    xlim([0 838])
+    xticks(tics)
+    xticklabels([{'-8'},{'-6'},{'-4'},{'-2'},{'0'},{'2'},{'4'},{'6'},{'8'},{'10'},{'12'},{'14'},{'16'},{'18'},{'20'}]);
+%     legend('∆Control Energy (fMRI)','∆Limpel-Ziv Complexity (EEG)')
+end
+
+pfdr = mafdr(pp,'BH',1)
+%%
+
+figure;
+for i=1:nsub
+    subplot(7,2,i)
+    [r,p] = corr(win_dmt_ce_global(i,:)',dmt_intensity(i,:)','type','Spearman');
+    for perm=1:nperms
+        idx1 = randperm(length(dmt_intensity));
+        rr(perm) = corr(win_dmt_ce_global(i,idx1)',dmt_intensity(i,:)','type','Spearman');
+    end
+    pp2(i) = mean(r>=rr);
+    % title([{'Group-level windowed control energy vs drug intensity'};{'(DMT - PCB)'}])
+    hold on
+    plot(win_dmt_ce_global(i,:)','bo--','LineWidth',1.5)
+    text(18,100,['R = ',num2str(r),'; p = ',num2str(pp2(i))],'FontSize',12)
+    ylabel('Control Energy')
+    yyaxis right
+    plot(dmt_intensity(i,:)','yellowo--','LineWidth',1.5)
+    ylabel('Intensity Ratings')
+    ylim([0 10])
+    xlabel('Minutes')
+    xlim([0 28])
+    xticks(linspace(0,28,15))
+    xticklabels([{'-8'},{'-6'},{'-4'},{'-2'},{'0'},{'2'},{'4'},{'6'},{'8'},{'10'},{'12'},{'14'},{'16'},{'18'},{'20'}]);
+    % legend('∆Control Energy (fMRI)','∆Intensity (subjective ratings)')
+end
+
+pfdr = mafdr(pp2,'BH',1)
+
+%%
+
+figure;
+for i=1:nsub
+    subplot(7,2,i)
+    [r,p] = corr(win_pcb_ce_global(i,:)',pcb_intensity(i,:)','type','Spearman');
+    for perm=1:nperms
+        idx1 = randperm(length(pcb_intensity));
+        rr(perm) = corr(win_pcb_ce_global(i,idx1)',pcb_intensity(i,:)','type','Spearman');
+    end
+    pp2(i) = mean(r>=rr);
+    % title([{'Group-level windowed control energy vs drug intensity'};{'(DMT - PCB)'}])
+    hold on
+    plot(win_pcb_ce_global(i,:)','bo--','LineWidth',1.5)
+    text(18,100,['R = ',num2str(r),'; p = ',num2str(pp2(i))],'FontSize',12)
+    ylabel('Control Energy')
+    yyaxis right
+    plot(pcb_intensity(i,:)','yellowo--','LineWidth',1.5)
+    ylabel('Intensity Ratings')
+    ylim([0 10])
+    xlabel('Minutes')
+    xlim([0 28])
+    xticks(linspace(0,28,15))
+    xticklabels([{'-8'},{'-6'},{'-4'},{'-2'},{'0'},{'2'},{'4'},{'6'},{'8'},{'10'},{'12'},{'14'},{'16'},{'18'},{'20'}]);
+    % legend('∆Control Energy (fMRI)','∆Intensity (subjective ratings)')
+end
+
+pfdr = mafdr(pp2,'BH',1)
