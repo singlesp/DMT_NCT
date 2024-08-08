@@ -11,6 +11,7 @@ RegPCB2 = RegPCB2 - nanmean(RegPCB2(:,1:240),2);
 RegDMT2 = RegDMT2(:,2:839);
 RegPCB2 = RegPCB2(:,2:839);
 
+run_cluster_stats(RegDMT2,RegPCB2,1,{'EEG Signal Diversity'},[1 0 0],[0 0 0]);
 
 %% Run stats
 % First grand average but keep the trials
@@ -157,7 +158,7 @@ bldmt = nanmean(global_CE_dmt(:,1:240),2);
 RegDMT2 = global_CE_dmt - bldmt;
 RegPCB2 = global_CE_pcb - nanmean(global_CE_pcb(:,1:240),2);
 
-
+run_cluster_stats(RegDMT2,RegPCB2,{'Global Control Energy'},[1 0 0],[0 0 0]);
 
 %% Run stats
 % First grand average but keep the rials
@@ -244,6 +245,7 @@ startclust = timesig(1);
 endclust = timesig(end);
 
 %% Plot Results
+addpath(genpath('~/Documents/MATLAB/boundedline'))
 
 chan=1;
 

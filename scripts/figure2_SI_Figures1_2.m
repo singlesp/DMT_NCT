@@ -66,174 +66,38 @@ legend(networks);
 
 %% SI FIGURE Network level
 
-tics = linspace(0,28,15);
-tics = tics*30;
-tics(end)=838;
+% tics = linspace(0,28,15);
+% tics = tics*30;
+% tics(end)=838;
 
 
 figure;
 subplot(5,2,1.5)
-[h,p]=ttest(global_CE_dmt,global_CE_pcb);
-% idx = double(find(p<0.05));
-post_inj = p(239:end);
-pfdr = mafdr(post_inj,'BH',1);
-pfdr = [ones(1,238) pfdr];
-idx = double(find(pfdr<0.05));
-hold on
-    plot(mean(global_CE_dmt)','black','LineWidth',2)
-    plot(mean(global_CE_pcb)','LineWidth',2)
-text(idx',repelem(.9*max(mean(global_CE_pcb)),length(idx)),'*')
-title('Global')
-legend('DMT','PCB')
-xticks(tics)
-xticklabels([{'-8'},{'-6'},{'-4'},{'-2'},{'0'},{'2'},{'4'},{'6'},{'8'},{'10'},{'12'},{'14'},{'16'},{'18'},{'20'}]);
-xlabel('Minutes')
-xlim([0 838])
-
+run_cluster_stats(global_CE_dmt,global_CE_pcb,-1,{'CE'},[1 0 0],[0 0 0],[],[],0,{'Global'},[12 14 18]);
 
 subplot(5,2,3)
-[h,p]=ttest(vis_CE,vis_CE_pcb);
-% idx = double(find(p<0.05));
-post_inj = p(239:end);
-pfdr = mafdr(post_inj,'BH',1);
-pfdr = [ones(1,238) pfdr];
-idx = double(find(pfdr<0.05));
-hold on
-    plot(mean(vis_CE)','black','LineWidth',2)
-    plot(mean(vis_CE_pcb)','LineWidth',2)
-text(idx',repelem(.9*max(mean(vis_CE_pcb)),length(idx)),'*')
-title(networks{1})
-xticks(tics)
-xticklabels([{'-8'},{'-6'},{'-4'},{'-2'},{'0'},{'2'},{'4'},{'6'},{'8'},{'10'},{'12'},{'14'},{'16'},{'18'},{'20'}]);
-xlabel('Minutes')
-xlim([0 838])
-
+run_cluster_stats(vis_CE,vis_CE_pcb,-1,{'CE'},[1 0 0],[0 0 0],[],[],0,networks{1},[12 14 18]);
 
 subplot(5,2,4)
-[h,p]=ttest(som_CE,som_CE_pcb);
-% idx = double(find(p<0.05));
-post_inj = p(239:end);
-pfdr = mafdr(post_inj,'BH',1);
-pfdr = [ones(1,238) pfdr];
-idx = double(find(pfdr<0.05));
-hold on
-    plot(mean(som_CE)','black','LineWidth',2)
-    plot(mean(som_CE_pcb)','LineWidth',2)
-text(idx',repelem(.9*max(mean(som_CE_pcb)),length(idx)),'*')
-title(networks{2})
-xticks(tics)
-xticklabels([{'-8'},{'-6'},{'-4'},{'-2'},{'0'},{'2'},{'4'},{'6'},{'8'},{'10'},{'12'},{'14'},{'16'},{'18'},{'20'}]);
-xlabel('Minutes')
-xlim([0 838])
-
+run_cluster_stats(som_CE,som_CE_pcb,-1,{'CE'},[1 0 0],[0 0 0],[],[],0,networks{2},[12 14 18]);
 
 subplot(5,2,5)
-[h,p]=ttest(dat_CE,dat_CE_pcb);
-% idx = double(find(p<0.05));
-post_inj = p(239:end);
-pfdr = mafdr(post_inj,'BH',1);
-pfdr = [ones(1,238) pfdr];
-idx = double(find(pfdr<0.05));
-hold on
-    plot(mean(dat_CE)','black','LineWidth',2)
-    plot(mean(dat_CE_pcb)','LineWidth',2)
-text(idx',repelem(.9*max(mean(dat_CE_pcb)),length(idx)),'*')
-title(networks{3})
-xticks(tics)
-xticklabels([{'-8'},{'-6'},{'-4'},{'-2'},{'0'},{'2'},{'4'},{'6'},{'8'},{'10'},{'12'},{'14'},{'16'},{'18'},{'20'}]);
-xlabel('Minutes')
-xlim([0 838])
-
+run_cluster_stats(dat_CE,dat_CE_pcb,-1,{'CE'},[1 0 0],[0 0 0],[],[],0,networks{3},[12 14 18]);
 
 subplot(5,2,6)
-[h,p]=ttest(vat_CE,vat_CE_pcb);
-% idx = double(find(p<0.05));
-post_inj = p(239:end);
-pfdr = mafdr(post_inj,'BH',1);
-pfdr = [ones(1,238) pfdr];
-idx = double(find(pfdr<0.05));
-hold on
-    plot(mean(vat_CE)','black','LineWidth',2)
-    plot(mean(vat_CE_pcb)','LineWidth',2)
-text(idx',repelem(.9*max(mean(vat_CE_pcb)),length(idx)),'*')
-title(networks{4})
-xticks(tics)
-xticklabels([{'-8'},{'-6'},{'-4'},{'-2'},{'0'},{'2'},{'4'},{'6'},{'8'},{'10'},{'12'},{'14'},{'16'},{'18'},{'20'}]);
-xlabel('Minutes')
-xlim([0 838])
-
+run_cluster_stats(vat_CE,vat_CE_pcb,-1,{'CE'},[1 0 0],[0 0 0],[],[],0,networks{4},[12 14 18]);
 
 subplot(5,2,7)
-[h,p]=ttest(lim_CE,lim_CE_pcb);
-% idx = double(find(p<0.05));
-post_inj = p(239:end);
-pfdr = mafdr(post_inj,'BH',1);
-pfdr = [ones(1,238) pfdr];
-idx = double(find(pfdr<0.05));
-hold on
-    plot(mean(lim_CE)','black','LineWidth',2)
-    plot(mean(lim_CE_pcb)','LineWidth',2)
-text(idx',repelem(.9*max(mean(lim_CE_pcb)),length(idx)),'*')
-title(networks{5})
-xticks(tics)
-xticklabels([{'-8'},{'-6'},{'-4'},{'-2'},{'0'},{'2'},{'4'},{'6'},{'8'},{'10'},{'12'},{'14'},{'16'},{'18'},{'20'}]);
-xlabel('Minutes')
-xlim([0 838])
-
+run_cluster_stats(lim_CE,lim_CE_pcb,-1,{'CE'},[1 0 0],[0 0 0],[],[],0,networks{5},[12 14 18]);
 
 subplot(5,2,8)
-[h,p]=ttest(fpn_CE,fpn_CE_pcb);
-% idx = double(find(p<0.05));
-post_inj = p(239:end);
-pfdr = mafdr(post_inj,'BH',1);
-pfdr = [ones(1,238) pfdr];
-idx = double(find(pfdr<0.05));
-hold on
-    plot(mean(fpn_CE)','black','LineWidth',2)
-    plot(mean(fpn_CE_pcb)','LineWidth',2)
-text(idx',repelem(.9*max(mean(fpn_CE_pcb)),length(idx)),'*')
-title(networks{6})
-xticks(tics)
-xticklabels([{'-8'},{'-6'},{'-4'},{'-2'},{'0'},{'2'},{'4'},{'6'},{'8'},{'10'},{'12'},{'14'},{'16'},{'18'},{'20'}]);
-xlabel('Minutes')
-xlim([0 838])
-
+run_cluster_stats(fpn_CE,fpn_CE_pcb,-1,{'CE'},[1 0 0],[0 0 0],[],[],0,networks{6},[12 14 18]);
 
 subplot(5,2,9)
-[h,p]=ttest(dmn_CE,dmn_CE_pcb);
-% idx = double(find(p<0.05));
-post_inj = p(239:end);
-pfdr = mafdr(post_inj,'BH',1);
-pfdr = [ones(1,238) pfdr];
-idx = double(find(pfdr<0.05));
-hold on
-    plot(mean(dmn_CE)','black','LineWidth',2)
-    plot(mean(dmn_CE_pcb)','LineWidth',2)
-text(idx',repelem(.9*max(mean(dmn_CE_pcb)),length(idx)),'*')
-title(networks{7})
-xticks(tics)
-xticklabels([{'-8'},{'-6'},{'-4'},{'-2'},{'0'},{'2'},{'4'},{'6'},{'8'},{'10'},{'12'},{'14'},{'16'},{'18'},{'20'}]);
-xlabel('Minutes')
-xlim([0 838])
-
+run_cluster_stats(dmn_CE,dmn_CE_pcb,-1,{'CE'},[1 0 0],[0 0 0],[],[],0,networks{7},[12 14 18]);
 
 subplot(5,2,10)
-[h,p]=ttest(sub_CE,sub_CE_pcb);
-% idx = double(find(p<0.05));
-post_inj = p(239:end);
-pfdr = mafdr(post_inj,'BH',1);
-pfdr = [ones(1,238) pfdr];
-idx = double(find(pfdr<0.05));
-hold on
-    plot(mean(sub_CE)','black','LineWidth',2)
-    plot(mean(sub_CE_pcb)','LineWidth',2)
-text(idx',repelem(.9*max(mean(sub_CE_pcb)),length(idx)),'*')
-title('SUB')
-xticks(tics)
-xticklabels([{'-8'},{'-6'},{'-4'},{'-2'},{'0'},{'2'},{'4'},{'6'},{'8'},{'10'},{'12'},{'14'},{'16'},{'18'},{'20'}]);
-xlabel('Minutes')
-xlim([0 838])
-
+run_cluster_stats(sub_CE,sub_CE_pcb,-1,{'CE'},[1 0 0],[0 0 0],[],[],0,{'SUB'},[12 14 18]);
 
 %% SI FIGURE summarize network comparison
 [h,p,~,t]=ttest(global_CE_dmt,global_CE_pcb);
@@ -298,27 +162,8 @@ ylabel('t-stat (DMT > PCB)')
 
 
 %% FIGURE 2a
-figure;
-[h,p]=ttest(global_CE_dmt,global_CE_pcb);
-post_inj = p(239:end);
-pfdr = mafdr(post_inj,'BH',1);
-fraction_sig_after_injection = sum(pfdr<0.05)/length(post_inj)
-pfdr = [ones(1,238) pfdr];
-idx = double(find(pfdr<0.05));
-hold on
-    plot(mean(global_CE_dmt)','black','LineWidth',1.5)
-    plot(mean(global_CE_pcb)','red','LineWidth',1.5)
-text(idx',repelem(.9*max(mean(global_CE_pcb)),length(idx)),'*')
-tics = linspace(0,28,15);
-tics = tics*30;
-tics(end)=838;
-xticks(tics)
-xticklabels([{'-8'},{'-6'},{'-4'},{'-2'},{'0'},{'2'},{'4'},{'6'},{'8'},{'10'},{'12'},{'14'},{'16'},{'18'},{'20'}]);
-xlabel('Minutes')
-xlim([0 838])
-ylabel('Control Energy');
-title([{'Group-level continuous control energy'};{'DMT vs PCB'}])
-legend('DMT Control Energy','PCB Control Energy')
+run_cluster_stats(global_CE_dmt,global_CE_pcb,-1,{'CE'},[1 0 0],[0 0 0]);
+
 
 %% window global CE for intensity comparison
 
