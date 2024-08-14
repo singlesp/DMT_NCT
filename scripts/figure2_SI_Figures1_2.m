@@ -210,7 +210,6 @@ data = mean(win_dmt_ce_global);
 [r,p] = corr(data',m_dmt_int','type','Spearman');
 for i=1:nperms
     idx1 = randperm(length(data));
-%     idx2 = randperm(length(data));
     rr(i) = corr(data(idx1)',m_dmt_int','type','Spearman');
 end
 pp1_int = mean(r>rr);
@@ -218,17 +217,17 @@ title([{'Energy/Intensity Time-series'};{'DMT continuous data (group means)'}])
 hold on
     plot(data,'bo--','LineWidth',2)
     text(14,160,['R = ',num2str(r),'; p = ',num2str(pp1_int)],'FontSize',12)
-    ylabel('E')
+    ylabel('Global Control Energy (a.u.)')
 %     ylim([250 950])
     ylim([50 180])
     yyaxis right
     plot(m_dmt_int,'blacko--','LineWidth',2)
-ylabel('Intensity')
+ylabel('Intensity Ratings')
 ylim([0 10])
 xlabel('Minutes')
 xlim([0 28])
-xticks(linspace(0,28,15))
-xticklabels([{'-8'},{'-6'},{'-4'},{'-2'},{'0'},{'2'},{'4'},{'6'},{'8'},{'10'},{'12'},{'14'},{'16'},{'18'},{'20'}]);
+xticks(linspace(0,28,8))
+xticklabels([{'-8'},{'-4'},{'0'},{'4'},{'8'},{'12'},{'16'},{'20'}]);
 legend('Energy','Intensity')
 
 subplot(2,1,2)
@@ -236,7 +235,6 @@ data=mean(win_pcb_ce_global);
 [r,p]=corr(data',m_pcb_int','type','Spearman');
 for i=1:nperms
     idx1 = randperm(length(data));
-%     idx2 = randperm(length(data));
     rr(i) = corr(data(idx1)',m_pcb_int','type','Spearman');
 end
 pp2_int = mean(r>rr);
@@ -244,17 +242,17 @@ title([{'Energy/Intensity Time-series'};{'PCB continuous data (group means)'}])
 hold on
     plot(data,'ro--','LineWidth',2)
     text(14,160,['R = ',num2str(r),'; p = ',num2str(pp2_int)],'FontSize',12)
-    ylabel('E')
+    ylabel('Global Control Energy (a.u.)')
 %     ylim([250 950])
     ylim([50 180])
     yyaxis right
     plot(m_pcb_int,'blacko--','LineWidth',2)
-ylabel('Intensity')
+ylabel('Intensity Ratings')
 ylim([0 10])
 xlabel('Minutes')
 xlim([0 28])
-xticks(linspace(0,28,15))
-xticklabels([{'-8'},{'-6'},{'-4'},{'-2'},{'0'},{'2'},{'4'},{'6'},{'8'},{'10'},{'12'},{'14'},{'16'},{'18'},{'20'}]);
+xticks(linspace(0,28,8))
+xticklabels([{'-8'},{'-4'},{'0'},{'4'},{'8'},{'12'},{'16'},{'20'}]);
 legend('Energy','Intensity')
 
 %% CE vs LZ for each condition
@@ -280,7 +278,7 @@ subplot(2,1,1)
 hold on
     plot(m_dmt_ce','blue','LineWidth',1.5)
     
-    ylabel('Control Energy')
+    ylabel('Global Control Energy (a.u.)')
     yyaxis right
     plot(m_dmt_LZ','green','LineWidth',1.5)
     ylabel('EEG Signal Diversity (LZ)')
@@ -295,11 +293,11 @@ text(350,100,['R = ',num2str(r),'; p = ',num2str(pp1_eg)],'FontSize',12)
 title([{'DMT continuous control energy vs signal diversity'}])
 xlabel('Minutes')
 xlim([0 838])
-tics = linspace(0,28,15);
+tics = linspace(0,28,8);
 tics = tics*30;
 tics(end)=838;
 xticks(tics)
-xticklabels([{'-8'},{'-6'},{'-4'},{'-2'},{'0'},{'2'},{'4'},{'6'},{'8'},{'10'},{'12'},{'14'},{'16'},{'18'},{'20'}]);
+xticklabels([{'-8'},{'-4'},{'0'},{'4'},{'8'},{'12'},{'16'},{'20'}]);
 legend('Control Energy (fMRI)','Limpel-Ziv Complexity (EEG)')
 
 
@@ -307,7 +305,7 @@ subplot(2,1,2)
 hold on
     plot(m_pcb_ce','blue','LineWidth',1.5)
     
-    ylabel('Control Energy')
+    ylabel('Global Control Energy (a.u.)')
     yyaxis right
     plot(m_pcb_LZ','green','LineWidth',1.5)
     ylabel('EEG Signal Diversity (LZ)')
@@ -322,11 +320,11 @@ text(300,200,['R = ',num2str(r),'; p = ',num2str(pp2_eg)],'FontSize',12)
 title([{'PCB continuous control energy vs signal diversity'}])
 xlabel('Minutes')
 xlim([0 838])
-tics = linspace(0,28,15);
+tics = linspace(0,28,8);
 tics = tics*30;
 tics(end)=838;
 xticks(tics)
-xticklabels([{'-8'},{'-6'},{'-4'},{'-2'},{'0'},{'2'},{'4'},{'6'},{'8'},{'10'},{'12'},{'14'},{'16'},{'18'},{'20'}]);
+xticklabels([{'-8'},{'-4'},{'0'},{'4'},{'8'},{'12'},{'16'},{'20'}]);
 legend('Control Energy (fMRI)','Limpel-Ziv Complexity (EEG)')
 
 %% correct global single condition SI correlations
