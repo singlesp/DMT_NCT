@@ -17,6 +17,8 @@ load([basedir,'data/sch116_to_yeo.csv'])
 network7labels=sch116_to_yeo;
 networks = [{'VIS'},{'SOM'},{'DAT'},{'VAT'},{'LIM'},{'FPN'},{'DMN'},{'SUB'}];
 
+addpath(genpath('~/Documents/MATLAB/boundedline'))
+
 %% get network level CE's for SI
 
 vis_CE = sum(regional_CE_dmt(:,:,network7labels==1),3);
@@ -207,6 +209,7 @@ clear rr pp*
 figure;
 subplot(2,1,1)
 data = mean(win_dmt_ce_global);
+sem = std(win_dmt_ce_global) / sqrt(size(win_dmt_ce_global,1));
 [r,p] = corr(data',m_dmt_int','type','Spearman');
 for i=1:nperms
     idx1 = randperm(length(data));
@@ -215,25 +218,32 @@ end
 pp1_int = mean(r>rr);
 title('DMT')
 hold on
-    plot(data,'bo--','LineWidth',2)
+%     plot(data,'bo--','LineWidth',2)
+    [l,p] = boundedline([1:28],data, sem,'alpha', 'transparency', 0.28);
+    set(l, 'linewidth', 2, 'color', [0 0 1]);
+    set(p, 'facecolor', [0 0 1]);
     text(14,160,['R = ',num2str(r),'; p = ',num2str(pp1_int)],'FontSize',12)
     ylabel('Global Control Energy (a.u.)')
-%     ylim([250 950])
     ylim([50 180])
-    yyaxis right
-    plot(m_dmt_int,'yellowo--','LineWidth',2)
+yyaxis right
+    data = mean(dmt_intensity);
+    sem = std(dmt_intensity) / sqrt(length(dmt_intensity));
+    [l,p] = boundedline([1:28],data, sem,'alpha', 'transparency', 0.28);
+    set(l, 'linewidth', 2, 'color', 'yellow');
+    set(p, 'facecolor', 'yellow');
     ax = gca; % Get the current axes
     ax.YAxis(2).Color = 'black'; % Set the right y-axis color
-ylabel('Intensity Ratings')
-ylim([0 10])
+    ylabel('Intensity Ratings (a.u.)')
+    ylim([0 10])
 xlabel('Minutes')
 xlim([0 28])
 xticks(linspace(0,28,8))
 xticklabels([{'-8'},{'-4'},{'0'},{'4'},{'8'},{'12'},{'16'},{'20'}]);
-legend('Control Energy (fMRI)','Intensity (subjective ratings)')
+legend('Control Energy (mean + SEM)','','Intensity (mean + SEM)','')
 
 subplot(2,1,2)
 data=mean(win_pcb_ce_global);
+sem = std(win_pcb_ce_global) / sqrt(size(win_pcb_ce_global,1));
 [r,p]=corr(data',m_pcb_int','type','Spearman');
 for i=1:nperms
     idx1 = randperm(length(data));
@@ -242,49 +252,64 @@ end
 pp2_int = mean(r>rr);
 title('PCB')
 hold on
-    plot(data,'bo--','LineWidth',2)
+    [l,p] = boundedline([1:28],data, sem,'alpha', 'transparency', 0.28);
+    set(l, 'linewidth', 2, 'color', [0 0 1]);
+    set(p, 'facecolor', [0 0 1]);
     text(14,160,['R = ',num2str(r),'; p = ',num2str(pp2_int)],'FontSize',12)
     ylabel('Global Control Energy (a.u.)')
-%     ylim([250 950])
     ylim([50 180])
-    yyaxis right
-    plot(m_pcb_int,'yellowo--','LineWidth',2)
+yyaxis right
+%     plot(m_pcb_int,'yellowo--','LineWidth',2)
+    data = mean(pcb_intensity);
+    sem = std(pcb_intensity) / sqrt(length(pcb_intensity));
+    [l,p] = boundedline([1:28],data, sem,'alpha', 'transparency', 0.28);
+    set(l, 'linewidth', 2, 'color', 'yellow');
+    set(p, 'facecolor', 'yellow');
     ax = gca; % Get the current axes
     ax.YAxis(2).Color = 'black'; % Set the right y-axis color
-ylabel('Intensity Ratings')
+ylabel('Intensity Ratings (a.u.)')
 ylim([0 10])
 xlabel('Minutes')
 xlim([0 28])
 xticks(linspace(0,28,8))
 xticklabels([{'-8'},{'-4'},{'0'},{'4'},{'8'},{'12'},{'16'},{'20'}]);
-legend('Control Energy (fMRI)','Intensity (subjective ratings)')
+legend('Control Energy (mean + SEM)','','Intensity (mean + SEM)','')
 
 %% CE vs LZ for each condition
 
 load([basedir,'data/RegressorLZInterpscrubbedConvolvedAvg.mat'])
 
 %baseline correct EEG first:
-bldmt = nanmean(RegDMT2(:,1:240),2);
-RegDMT2 = RegDMT2 - bldmt;
+RegDMT2 = RegDMT2 - nanmean(RegDMT2(:,1:240),2);
 RegPCB2 = RegPCB2 - nanmean(RegPCB2(:,1:240),2);
 
 RegDMT2 = RegDMT2(:,2:839);
 m_dmt_LZ = nanmean(RegDMT2);
+sem_dmt_LZ = std(RegDMT2) / sqrt(size(RegDMT2,1));
+
 RegPCB2 = RegPCB2(:,2:839);
 m_pcb_LZ = nanmean(RegPCB2);
+sem_pcb_LZ = std(RegPCB2) / sqrt(size(RegPCB2,1));
 
 m_dmt_ce = nanmean(global_CE_dmt);
+sem_dmt_ce = std(global_CE_dmt) / sqrt(size(global_CE_dmt,1));
 m_pcb_ce = nanmean(global_CE_pcb);
+sem_pcb_ce = std(global_CE_pcb) / sqrt(size(global_CE_pcb,1));
 
 
 figure;
 subplot(2,1,1)
 hold on
-    plot(m_dmt_ce','blue','LineWidth',1.5)
-    
+%     plot(m_dmt_ce','blue','LineWidth',1.5)
+    [l,p] = boundedline([1:838],m_dmt_ce, sem_dmt_ce,'alpha', 'transparency', 0.28);
+    set(l, 'linewidth', 2, 'color', [0 0 1]);
+    set(p, 'facecolor', [0 0 1]);
     ylabel('Global Control Energy (a.u.)')
-    yyaxis right
-    plot(m_dmt_LZ','green','LineWidth',1.5)
+yyaxis right
+%     plot(m_dmt_LZ','green','LineWidth',1.5)
+    [l,p] = boundedline([1:838],m_dmt_LZ, sem_dmt_LZ,'alpha', 'transparency', 0.28);
+    set(l, 'linewidth', 2, 'color', [0 1 0]);
+    set(p, 'facecolor', [0 1 0]);
     ax = gca; % Get the current axes
     ax.YAxis(2).Color = 'black'; % Set the right y-axis color
     ylabel('EEG Signal Diversity (a.u.)')
@@ -304,17 +329,22 @@ tics = tics*30;
 tics(end)=838;
 xticks(tics)
 xticklabels([{'-8'},{'-4'},{'0'},{'4'},{'8'},{'12'},{'16'},{'20'}]);
-legend('Control Energy (fMRI)','Signal Diversity (EEG)')
+legend('Control Energy (mean + SEM)','','Signal Diversity (mean + SEM)','')
 
 
 subplot(2,1,2)
 hold on
-    plot(m_pcb_ce','blue','LineWidth',1.5)
-    
+%     plot(m_pcb_ce','blue','LineWidth',1.5)
+    [l,p] = boundedline([1:838],m_pcb_ce, sem_pcb_ce,'alpha', 'transparency', 0.28);
+    set(l, 'linewidth', 2, 'color', [0 0 1]);
+    set(p, 'facecolor', [0 0 1]);
     ylabel('Global Control Energy (a.u.)')
-    yyaxis right
-    plot(m_pcb_LZ','green','LineWidth',1.5)
-   ax = gca; % Get the current axes
+yyaxis right
+%     plot(m_pcb_LZ','green','LineWidth',1.5)
+    [l,p] = boundedline([1:838],m_pcb_LZ, sem_pcb_LZ,'alpha', 'transparency', 0.28);
+    set(l, 'linewidth', 2, 'color', [0 1 0]);
+    set(p, 'facecolor', [0 1 0]);
+    ax = gca; % Get the current axes
     ax.YAxis(2).Color = 'black'; % Set the right y-axis color
     ylabel('EEG Signal Diversity (a.u.)')
     yyaxis left
@@ -323,7 +353,7 @@ for i=1:nperms
     idx1 = randperm(length(m_pcb_LZ));
     rr(i) = corr(m_pcb_ce',m_pcb_LZ(idx1)','type','Spearman');
 end
-pp2_eg = mean(r>=rr)
+pp2_eg = mean(r>=rr);
 text(300,200,['R = ',num2str(r),'; p = ',num2str(pp2_eg)],'FontSize',12)
 title([{'PCB'}])
 xlabel('Minutes')
@@ -333,7 +363,7 @@ tics = tics*30;
 tics(end)=838;
 xticks(tics)
 xticklabels([{'-8'},{'-4'},{'0'},{'4'},{'8'},{'12'},{'16'},{'20'}]);
-legend('Control Energy (fMRI)','Signal Diversity (EEG)')
+legend('Control Energy (mean + SEM)','','Signal Diversity (mean + SEM)','')
 
 %% correct global single condition SI correlations
 
@@ -366,10 +396,12 @@ subplot(2,1,1)
 hold on
     plot(nanmean(diff_ce)','blue','LineWidth',1.5)
     
-    ylabel('∆Control Energy')
+    ylabel('∆Control Energy (a.u.)')
     yyaxis right
     plot(mean(diff_lz)','green','LineWidth',1.5)
-    ylabel('∆EEG Signal Diversity (LZ)')
+    ax = gca; % Get the current axes
+    ax.YAxis(2).Color = 'black'; % Set the right y-axis color
+    ylabel('∆EEG Signal Diversity (a.u.)')
     yyaxis left
 [r,p] = corr(nanmean(diff_ce)',m_diff_lz','type','Spearman')
 for i=1:nperms
@@ -380,13 +412,13 @@ pp1 = mean(r>=rr)
 text(400,-100,['R = ',num2str(r),'; p = ',num2str(pp1)],'FontSize',12)
 title([{'Group-level continuous control energy vs signal diversity'};{'(DMT - PCB)'}])
 xlabel('Minutes')
-tics = linspace(0,28,15);
+tics = linspace(0,28,8);
 tics = tics*30;
 tics(end)=838;
 xlim([0 838])
 xticks(tics)
-xticklabels([{'-8'},{'-6'},{'-4'},{'-2'},{'0'},{'2'},{'4'},{'6'},{'8'},{'10'},{'12'},{'14'},{'16'},{'18'},{'20'}]);
-legend('∆Control Energy (fMRI)','∆Limpel-Ziv Complexity (EEG)')
+xticklabels([{'-8'},{'-4'},{'0'},{'4'},{'8'},{'12'},{'16'},{'20'}]);
+legend('∆Control Energy (fMRI)','∆Signal Diversity (EEG)')
 
 
 subplot(2,1,2)
@@ -402,15 +434,17 @@ title([{'Group-level windowed control energy vs drug intensity'};{'(DMT - PCB)'}
 hold on
     plot(data,'bo--','LineWidth',1.5)
     text(18,-30,['R = ',num2str(r),'; p = ',num2str(pp2)],'FontSize',12)
-    ylabel('∆Control Energy')
+    ylabel('∆Control Energy (a.u.)')
     yyaxis right
     plot(diff_int,'yellowo--','LineWidth',1.5)
-ylabel('∆Intensity Ratings')
+    ax = gca; % Get the current axes
+    ax.YAxis(2).Color = 'black'; % Set the right y-axis color
+ylabel('∆Intensity Ratings (a.u.)')
 ylim([0 10])
 xlabel('Minutes')
 xlim([0 28])
-xticks(linspace(0,28,15))
-xticklabels([{'-8'},{'-6'},{'-4'},{'-2'},{'0'},{'2'},{'4'},{'6'},{'8'},{'10'},{'12'},{'14'},{'16'},{'18'},{'20'}]);
+xticks(linspace(0,28,8))
+xticklabels([{'-8'},{'-4'},{'0'},{'4'},{'8'},{'12'},{'16'},{'20'}]);
 legend('∆Control Energy (fMRI)','∆Intensity (subjective ratings)')
 
 
