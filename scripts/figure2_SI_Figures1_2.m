@@ -209,7 +209,6 @@ clear rr pp*
 figure;
 subplot(2,1,1)
 data = mean(win_dmt_ce_global);
-sem = std(win_dmt_ce_global) / sqrt(size(win_dmt_ce_global,1));
 [r,p] = corr(data',m_dmt_int','type','Spearman');
 for i=1:nperms
     idx1 = randperm(length(data));
@@ -218,19 +217,12 @@ end
 pp1_int = mean(r>rr);
 title('DMT')
 hold on
-%     plot(data,'bo--','LineWidth',2)
-    [l,p] = boundedline([1:28],data, sem,'alpha', 'transparency', 0.28);
-    set(l, 'linewidth', 2, 'color', [0 0 1]);
-    set(p, 'facecolor', [0 0 1]);
+    plot_bounded_line(win_dmt_ce_global,[0 0 1]);
     text(14,160,['R = ',num2str(r),'; p = ',num2str(pp1_int)],'FontSize',12)
     ylabel('Global Control Energy (a.u.)')
     ylim([50 180])
 yyaxis right
-    data = mean(dmt_intensity);
-    sem = std(dmt_intensity) / sqrt(length(dmt_intensity));
-    [l,p] = boundedline([1:28],data, sem,'alpha', 'transparency', 0.28);
-    set(l, 'linewidth', 2, 'color', 'yellow');
-    set(p, 'facecolor', 'yellow');
+    plot_bounded_line(dmt_intensity,'yellow');
     ax = gca; % Get the current axes
     ax.YAxis(2).Color = 'black'; % Set the right y-axis color
     ylabel('Intensity Ratings (a.u.)')
@@ -243,7 +235,6 @@ legend('Control Energy (mean + SEM)','','Intensity (mean + SEM)','')
 
 subplot(2,1,2)
 data=mean(win_pcb_ce_global);
-sem = std(win_pcb_ce_global) / sqrt(size(win_pcb_ce_global,1));
 [r,p]=corr(data',m_pcb_int','type','Spearman');
 for i=1:nperms
     idx1 = randperm(length(data));
@@ -252,19 +243,12 @@ end
 pp2_int = mean(r>rr);
 title('PCB')
 hold on
-    [l,p] = boundedline([1:28],data, sem,'alpha', 'transparency', 0.28);
-    set(l, 'linewidth', 2, 'color', [0 0 1]);
-    set(p, 'facecolor', [0 0 1]);
+    plot_bounded_line(win_pcb_ce_global,[0 0 1]);
     text(14,160,['R = ',num2str(r),'; p = ',num2str(pp2_int)],'FontSize',12)
     ylabel('Global Control Energy (a.u.)')
     ylim([50 180])
 yyaxis right
-%     plot(m_pcb_int,'yellowo--','LineWidth',2)
-    data = mean(pcb_intensity);
-    sem = std(pcb_intensity) / sqrt(length(pcb_intensity));
-    [l,p] = boundedline([1:28],data, sem,'alpha', 'transparency', 0.28);
-    set(l, 'linewidth', 2, 'color', 'yellow');
-    set(p, 'facecolor', 'yellow');
+    plot_bounded_line(pcb_intensity,'yellow');
     ax = gca; % Get the current axes
     ax.YAxis(2).Color = 'black'; % Set the right y-axis color
 ylabel('Intensity Ratings (a.u.)')
@@ -285,31 +269,21 @@ RegPCB2 = RegPCB2 - nanmean(RegPCB2(:,1:240),2);
 
 RegDMT2 = RegDMT2(:,2:839);
 m_dmt_LZ = nanmean(RegDMT2);
-sem_dmt_LZ = std(RegDMT2) / sqrt(size(RegDMT2,1));
 
 RegPCB2 = RegPCB2(:,2:839);
 m_pcb_LZ = nanmean(RegPCB2);
-sem_pcb_LZ = std(RegPCB2) / sqrt(size(RegPCB2,1));
 
 m_dmt_ce = nanmean(global_CE_dmt);
-sem_dmt_ce = std(global_CE_dmt) / sqrt(size(global_CE_dmt,1));
 m_pcb_ce = nanmean(global_CE_pcb);
-sem_pcb_ce = std(global_CE_pcb) / sqrt(size(global_CE_pcb,1));
 
 
 figure;
 subplot(2,1,1)
 hold on
-%     plot(m_dmt_ce','blue','LineWidth',1.5)
-    [l,p] = boundedline([1:838],m_dmt_ce, sem_dmt_ce,'alpha', 'transparency', 0.28);
-    set(l, 'linewidth', 2, 'color', [0 0 1]);
-    set(p, 'facecolor', [0 0 1]);
+    plot_bounded_line(global_CE_dmt,[0 0 1]);
     ylabel('Global Control Energy (a.u.)')
 yyaxis right
-%     plot(m_dmt_LZ','green','LineWidth',1.5)
-    [l,p] = boundedline([1:838],m_dmt_LZ, sem_dmt_LZ,'alpha', 'transparency', 0.28);
-    set(l, 'linewidth', 2, 'color', [0 1 0]);
-    set(p, 'facecolor', [0 1 0]);
+    plot_bounded_line(RegDMT2,[0 1 0]);
     ax = gca; % Get the current axes
     ax.YAxis(2).Color = 'black'; % Set the right y-axis color
     ylabel('EEG Signal Diversity (a.u.)')
@@ -319,7 +293,7 @@ for i=1:nperms
     idx1 = randperm(length(m_dmt_LZ));
     rr(i) = corr(m_dmt_ce',m_dmt_LZ(idx1)','type','Spearman');
 end
-pp1_eg = mean(r>=rr)
+pp1_eg = mean(r>=rr);
 text(350,100,['R = ',num2str(r),'; p = ',num2str(pp1_eg)],'FontSize',12)
 title([{'DMT'}])
 xlabel('Minutes')
@@ -334,16 +308,10 @@ legend('Control Energy (mean + SEM)','','Signal Diversity (mean + SEM)','')
 
 subplot(2,1,2)
 hold on
-%     plot(m_pcb_ce','blue','LineWidth',1.5)
-    [l,p] = boundedline([1:838],m_pcb_ce, sem_pcb_ce,'alpha', 'transparency', 0.28);
-    set(l, 'linewidth', 2, 'color', [0 0 1]);
-    set(p, 'facecolor', [0 0 1]);
+    plot_bounded_line(global_CE_pcb,[0 0 1]);
     ylabel('Global Control Energy (a.u.)')
 yyaxis right
-%     plot(m_pcb_LZ','green','LineWidth',1.5)
-    [l,p] = boundedline([1:838],m_pcb_LZ, sem_pcb_LZ,'alpha', 'transparency', 0.28);
-    set(l, 'linewidth', 2, 'color', [0 1 0]);
-    set(p, 'facecolor', [0 1 0]);
+    plot_bounded_line(RegPCB2,[0 1 0]);
     ax = gca; % Get the current axes
     ax.YAxis(2).Color = 'black'; % Set the right y-axis color
     ylabel('EEG Signal Diversity (a.u.)')
