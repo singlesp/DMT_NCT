@@ -161,7 +161,7 @@ set(gca, 'linewidth', 2,'Fontsize',fontsizes(1), 'Box', 'on')
 
 set(gcf, 'color', [1 1 1],'position' ,[1000         918         787         420]);
 
-h2 = legend('DMT', 'Placebo');
+h2 = legend('DMT', 'PCB');
 tics = linspace(0,28,8);
 tics = tics*30;
 tics(end)=838;

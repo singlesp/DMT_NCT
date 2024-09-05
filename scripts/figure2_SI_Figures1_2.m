@@ -164,9 +164,10 @@ ylabel('t-stat (DMT > PCB)')
 
 
 %% FIGURE 2a
-run_cluster_stats(global_CE_dmt,global_CE_pcb,-1,{'CE (a.u.)'},[1 0 0],[0 0 0]);
+[~,timesig]=run_cluster_stats(global_CE_dmt,global_CE_pcb,-1,{'CE (a.u.)'},[1 0 0],[0 0 0]);
 
-
+post_inj = length(239:838);
+percent_significant = length([timesig{:}])/post_inj*100;
 %% window global CE for intensity comparison
 
 load([basedir,'data/intensity_ratings.mat'])
@@ -209,42 +210,42 @@ clear rr pp*
 figure;
 subplot(2,1,1)
 data = mean(win_dmt_ce_global);
-[r,p] = corr(data',m_dmt_int','type','Spearman');
+[r1_int,p] = corr(data',m_dmt_int','type','Spearman');
 for i=1:nperms
     idx1 = randperm(length(data));
     rr(i) = corr(data(idx1)',m_dmt_int','type','Spearman');
 end
-pp1_int = mean(r>rr);
+pp1_int = mean(r1_int>rr);
 title('DMT')
 hold on
     plot_bounded_line(win_dmt_ce_global,[0 0 1]);
-    text(14,160,['R = ',num2str(r),'; p = ',num2str(pp1_int)],'FontSize',12)
+    text(14,160,['R = ',num2str(r1_int),'; p = ',num2str(pp1_int)],'FontSize',12)
     ylabel('CE (a.u.)')
     ylim([50 180])
 yyaxis right
     plot_bounded_line(dmt_intensity,'yellow');
     ax = gca; % Get the current axes
     ax.YAxis(2).Color = 'black'; % Set the right y-axis color
-    ylabel('Intensity(a.u.)')
+    ylabel('Intensity (a.u.)')
     ylim([0 10])
 xlabel('Minutes')
 xlim([0 28])
 xticks(linspace(0,28,8))
 xticklabels([{'-8'},{'-4'},{'0'},{'4'},{'8'},{'12'},{'16'},{'20'}]);
-legend('Control Energy (mean + SEM)','','Intensity (mean + SEM)','')
+legend('CE','','Intensity','')
 
 subplot(2,1,2)
 data=mean(win_pcb_ce_global);
-[r,p]=corr(data',m_pcb_int','type','Spearman');
+[r2_int,p]=corr(data',m_pcb_int','type','Spearman');
 for i=1:nperms
     idx1 = randperm(length(data));
     rr(i) = corr(data(idx1)',m_pcb_int','type','Spearman');
 end
-pp2_int = mean(r>rr);
+pp2_int = mean(r2_int>rr);
 title('PCB')
 hold on
     plot_bounded_line(win_pcb_ce_global,[0 0 1]);
-    text(14,160,['R = ',num2str(r),'; p = ',num2str(pp2_int)],'FontSize',12)
+    text(14,160,['R = ',num2str(r2_int),'; p = ',num2str(pp2_int)],'FontSize',12)
     ylabel('CE (a.u.)')
     ylim([50 180])
 yyaxis right
@@ -257,7 +258,7 @@ xlabel('Minutes')
 xlim([0 28])
 xticks(linspace(0,28,8))
 xticklabels([{'-8'},{'-4'},{'0'},{'4'},{'8'},{'12'},{'16'},{'20'}]);
-legend('Control Energy (mean + SEM)','','Intensity (mean + SEM)','')
+legend('CE','','Intensity','')
 
 %% CE vs LZ for each condition
 
@@ -286,15 +287,15 @@ yyaxis right
     plot_bounded_line(RegDMT2,[0 1 0]);
     ax = gca; % Get the current axes
     ax.YAxis(2).Color = 'black'; % Set the right y-axis color
-    ylabel('Signal Diversity (a.u.)')
+    ylabel('LZc (a.u.)')
     yyaxis left
-[r,p] = corr(m_dmt_ce',m_dmt_LZ','type','Spearman');
+[r1_eg,p] = corr(m_dmt_ce',m_dmt_LZ','type','Spearman');
 for i=1:nperms
     idx1 = randperm(length(m_dmt_LZ));
     rr(i) = corr(m_dmt_ce',m_dmt_LZ(idx1)','type','Spearman');
 end
-pp1_eg = mean(r>=rr);
-text(350,100,['R = ',num2str(r),'; p = ',num2str(pp1_eg)],'FontSize',12)
+pp1_eg = mean(r1_eg>=rr);
+text(350,100,['R = ',num2str(r1_eg),'; p = ',num2str(pp1_eg)],'FontSize',12)
 title([{'DMT'}])
 xlabel('Minutes')
 xlim([0 838])
@@ -303,7 +304,7 @@ tics = tics*30;
 tics(end)=838;
 xticks(tics)
 xticklabels([{'-8'},{'-4'},{'0'},{'4'},{'8'},{'12'},{'16'},{'20'}]);
-legend('Control Energy (mean + SEM)','','Signal Diversity (mean + SEM)','')
+legend('CE','','LZc','')
 
 
 subplot(2,1,2)
@@ -314,15 +315,15 @@ yyaxis right
     plot_bounded_line(RegPCB2,[0 1 0]);
     ax = gca; % Get the current axes
     ax.YAxis(2).Color = 'black'; % Set the right y-axis color
-    ylabel('Signal Diversity (a.u.)')
+    ylabel('LZc (a.u.)')
     yyaxis left
-[r,p] = corr(m_pcb_ce',m_pcb_LZ','type','Spearman');
+[r2_eg,p] = corr(m_pcb_ce',m_pcb_LZ','type','Spearman');
 for i=1:nperms
     idx1 = randperm(length(m_pcb_LZ));
     rr(i) = corr(m_pcb_ce',m_pcb_LZ(idx1)','type','Spearman');
 end
-pp2_eg = mean(r>=rr);
-text(300,200,['R = ',num2str(r),'; p = ',num2str(pp2_eg)],'FontSize',12)
+pp2_eg = mean(r2_eg>=rr);
+text(300,200,['R = ',num2str(r2_eg),'; p = ',num2str(pp2_eg)],'FontSize',12)
 title([{'PCB'}])
 xlabel('Minutes')
 xlim([0 838])
@@ -331,16 +332,12 @@ tics = tics*30;
 tics(end)=838;
 xticks(tics)
 xticklabels([{'-8'},{'-4'},{'0'},{'4'},{'8'},{'12'},{'16'},{'20'}]);
-legend('Control Energy (mean + SEM)','','Signal Diversity (mean + SEM)','')
-
-%% correct global single condition SI correlations
-
-pfdr = mafdr([pp1_int pp2_int pp1_eg pp2_eg],'BH',1)
+legend('CE','','LZc','')
 
 
 %% FIGURE 2B and 2C
 
-clear rr pp*
+clear rr
 
 load([basedir,'data/RegressorLZInterpscrubbedConvolvedAvg.mat'])
 
@@ -369,15 +366,15 @@ hold on
     plot_bounded_line(diff_lz,[0 1 0]);
     ax = gca; % Get the current axes
     ax.YAxis(2).Color = 'black'; % Set the right y-axis color
-    ylabel('Signal Diversity (a.u.)')
+    ylabel('LZc (a.u.)')
     yyaxis left
-[r,p] = corr(nanmean(diff_ce)',m_diff_lz','type','Spearman');
+[r1,p] = corr(nanmean(diff_ce)',m_diff_lz','type','Spearman');
 for i=1:nperms
     idx1 = randperm(length(m_dmt_LZ));
     rr(i) = corr(nanmean(diff_ce)',m_diff_lz(idx1)','type','Spearman');
 end
-pp1 = mean(r>=rr);
-text(400,-100,['R = ',num2str(r),'; p = ',num2str(pp1)],'FontSize',12)
+pp1 = mean(r1>=rr);
+text(400,-100,['R = ',num2str(r1),'; p = ',num2str(pp1)],'FontSize',12)
 % title([{'Group-level continuous control energy vs signal diversity'};{'(DMT - PCB)'}])
 xlabel('Minutes')
 tics = linspace(0,28,8);
@@ -386,23 +383,23 @@ tics(end)=838;
 xlim([0 838])
 xticks(tics)
 xticklabels([{'-8'},{'-4'},{'0'},{'4'},{'8'},{'12'},{'16'},{'20'}]);
-legend('Control Energy DMT-PCB (mean + SEM)','','Signal Diversity DMT-PCB (mean + SEM)','')
+legend('CE DMT-PCB','','LZc DMT-PCB','')
 
 
 subplot(2,1,2)
 data = mean(win_dmt_ce_global-win_pcb_ce_global);
 diff_int = m_dmt_int - m_pcb_int;
-[r,p] = corr(data',diff_int','type','Spearman');
+[r2,p] = corr(data',diff_int','type','Spearman');
 for i=1:nperms
     idx1 = randperm(length(data));
     rr(i) = corr(data(idx1)',diff_int','type','Spearman');
 end
-pp2 = mean(r>=rr);
+pp2 = mean(r2>=rr);
 % title([{'Group-level windowed control energy vs drug intensity'};{'(DMT - PCB)'}])
 hold on
 %     plot(data,'bo--','LineWidth',1.5)
     plot_bounded_line(win_dmt_ce_global-win_pcb_ce_global,[0 0 1]);
-    text(18,-30,['R = ',num2str(r),'; p = ',num2str(pp2)],'FontSize',12)
+    text(18,-30,['R = ',num2str(r2),'; p = ',num2str(pp2)],'FontSize',12)
     ylabel('CE (a.u.)')
     yyaxis right
 %     plot(diff_int,'yellowo--','LineWidth',1.5)
@@ -415,30 +412,30 @@ xlabel('Minutes')
 xlim([0 28])
 xticks(linspace(0,28,8))
 xticklabels([{'-8'},{'-4'},{'0'},{'4'},{'8'},{'12'},{'16'},{'20'}]);
-legend('Control Energy DMT-PCB (mean + SEM)','','Intensity DMT-PCB (mean + SEM)','')
+legend('CE DMT-PCB','','Intensity DMT-PCB','')
 
 
 %% correlation for post-injection period only (in-text)
 
 post_inj_diff_lz = m_diff_lz(239:end);
-[r,p] = corr(nanmean(diff_ce(:,239:end))',post_inj_diff_lz','type','Spearman')
+[r1_post,p] = corr(nanmean(diff_ce(:,239:end))',post_inj_diff_lz','type','Spearman')
 for i=1:nperms
     idx1 = randperm(length(post_inj_diff_lz));
     rr(i) = corr(nanmean(diff_ce(:,239:end))',post_inj_diff_lz(idx1)','type','Spearman');
 end
-pp1_post = mean(r>=rr);
+pp1_post = mean(r1_post>=rr);
 
 
 data = mean(win_dmt_ce_global-win_pcb_ce_global);
 data_post = data(9:end);
 diff_int = m_dmt_int - m_pcb_int;
 diff_int_post = diff_int(9:end);
-[r,p] = corr(data_post',diff_int_post','type','Spearman')
+[r2_post,p] = corr(data_post',diff_int_post','type','Spearman')
 for i=1:nperms
     idx1 = randperm(length(data_post));
     rr(i) = corr(data_post(idx1)',diff_int_post','type','Spearman');
 end
-pp2_post = mean(r>=rr);
+pp2_post = mean(r2_post>=rr);
 
 %% in-text correlation for full scan: partial corr w/ FD covar
 
@@ -470,12 +467,12 @@ end
 
 % partial spearman corr bw energy diff and LZ
 resid = regress_confound([tiedrank(nanmean(diff_ce)') tiedrank(m_diff_lz')],tiedrank(diff_fd'),'fittype','lsq','addconstant',true);
-[r,p] = corr(resid(:,1),resid(:,2))
+[r1_fd,p] = corr(resid(:,1),resid(:,2))
 for i=1:nperms
     idx1 = randperm(length(m_dmt_LZ));
     rr(i) = corr(resid(:,1),resid(idx1,2));
 end
-pp1_fd = mean(r>=rr)
+pp1_fd = mean(r1_fd>=rr)
 
 % partial spearman for bw energy diff and intensity 
 m_win_ce_diff = mean(win_dmt_ce_global-win_pcb_ce_global);
@@ -483,24 +480,24 @@ m_win_fd_diff = mean(win_dmt_fd-win_pcb_fd);
 diff_int = m_dmt_int - m_pcb_int;
 
 resid = regress_confound([tiedrank(m_win_ce_diff') tiedrank(diff_int')],tiedrank(m_win_fd_diff'),'fittype','lsq','addconstant',true);
-[r,p] = corr(resid(:,1),resid(:,2))
+[r2_fd,p] = corr(resid(:,1),resid(:,2))
 for i=1:nperms
     idx1 = randperm(length(diff_int));
     rr(i) = corr(resid(:,1),resid(idx1,2));
 end
-pp2_fd = mean(r>=rr)
+pp2_fd = mean(r2_fd>=rr)
 
-%% correction of main text global correlations
+%% correction of all group-level correlation p-values
 
-pfdr = mafdr([pp1 pp2 pp1_post pp2_post pp1_fd pp2_fd],'BH',1)
+rho_group = [r1 r2 r1_post r2_post r1_fd r2_fd r1_int r2_int r1_eg r2_eg]
+pfdr_group = mafdr([pp1 pp2 pp1_post pp2_post pp1_fd pp2_fd pp1_int pp2_int pp1_eg pp2_eg],'BH',1)
 
 %% EEG direct comparison (SI)
 
 load([basedir,'data/RegressorLZInterpscrubbedConvolvedAvg.mat'])
 
 %baseline correct EEG first:
-bldmt = nanmean(RegDMT2(:,1:240),2);
-RegDMT2 = RegDMT2 - bldmt;
+RegDMT2 = RegDMT2 - nanmean(RegDMT2(:,1:240),2);
 RegPCB2 = RegPCB2 - nanmean(RegPCB2(:,1:240),2);
 
 RegDMT2 = RegDMT2(:,2:839);
@@ -508,29 +505,7 @@ m_dmt_LZ = nanmean(RegDMT2);
 RegPCB2 = RegPCB2(:,2:839);
 m_pcb_LZ = nanmean(RegPCB2);
 
-% diff_ce = global_CE_dmt - global_CE_pcb;
-% diff_lz = RegDMT2 - RegPCB2;
-
-figure;
-[h,p]=ttest(RegDMT2,RegPCB2);
-post_inj = p(239:end);
-pfdr = mafdr(post_inj,'BH',1);
-fraction_sig_after_injection = sum(pfdr<0.05)/length(post_inj)
-pfdr = [ones(1,238) pfdr];
-idx = double(find(pfdr<0.05));
-hold on
-    plot(m_dmt_LZ,'black','LineWidth',1.5)
-    plot(m_pcb_LZ,'red','LineWidth',1.5)
-text(idx',repelem(.9*max(m_dmt_LZ),length(idx)),'*')
-tics = linspace(0,28,15);
-tics = tics*30;
-tics(end)=838;
-xticks(tics)
-xticklabels([{'-8'},{'-6'},{'-4'},{'-2'},{'0'},{'2'},{'4'},{'6'},{'8'},{'10'},{'12'},{'14'},{'16'},{'18'},{'20'}]);
-xlabel('Minutes')
-ylabel('EEG Signal Diversity (LZ)');
-title([{'Entropy time-series'};{'DMT vs PCB'}])
-legend('DMT signal diversity','PCB signal diversity')
+run_cluster_stats(RegDMT2,RegPCB2,1,{'LZc (a.u.)'},[1 0 0],[0 0 0]);
 
 %% subject level correlations (SI)
 %DMT CE vs LZ
@@ -542,36 +517,11 @@ for i=1:nsub
         rr(perm) = corr(global_CE_dmt(i,:)',RegDMT2(i,idx1)','type','Spearman');
     end
     if r<0
-        pp(i) = mean(r>=rr);
+        pp_DMT_eg(i) = mean(r>=rr);
     else
-        pp(i) = mean(r<=rr);
+        pp_DMT_eg(i) = mean(r<=rr);
     end
 end
-pfdr = mafdr(pp,'BH',1);
-
-figure;
-for i=1:nsub
-    subplot(7,2,i)
-    hold on
-    plot(global_CE_dmt(i,:)','blue','LineWidth',1.5)
-    
-    ylabel('CE')
-    yyaxis right
-    plot(RegDMT2(i,:)','green','LineWidth',1.5)
-    ylabel('LZ')
-    yyaxis left
-    [r,p] = corr(global_CE_dmt(i,:)',RegDMT2(i,:)','type','Spearman');
-    text(400,200,['R = ',num2str(round(r,2)),'; p = ',num2str(round(pfdr(i),4))],'FontSize',12)
-    xlabel('Minutes')
-    tics = linspace(0,28,15);
-    tics = tics*30;
-    tics(end)=838;
-    xlim([0 838])
-    xticks(tics)
-    xticklabels([{'-8'},{'-6'},{'-4'},{'-2'},{'0'},{'2'},{'4'},{'6'},{'8'},{'10'},{'12'},{'14'},{'16'},{'18'},{'20'}]);
-end
-set(gcf,'Position',[0 0 1000 975])
-
 
 %% PCB CE vs LZ
 
@@ -582,12 +532,76 @@ for i=1:nsub
         rr(perm) = corr(global_CE_pcb(i,:)',RegPCB2(i,idx1)','type','Spearman','rows','complete');
     end
     if r<0
-        pp(i) = mean(r>=rr);
+        pp_PCB_eg(i) = mean(r>=rr);
     else
-        pp(i) = mean(r<=rr);
+        pp_PCB_eg(i) = mean(r<=rr);
     end 
 end
-pfdr = mafdr(pp,'BH',1);
+
+
+%% DMT CE vs intensity
+
+for i=1:nsub
+    [r,p] = corr(win_dmt_ce_global(i,:)',dmt_intensity(i,:)','type','Spearman');
+   for perm=1:nperms
+        idx1 = randperm(length(dmt_intensity));
+        rr(perm) = corr(win_dmt_ce_global(i,idx1)',dmt_intensity(i,:)','type','Spearman');
+    end
+    if r<0
+        pp_DMT_int(i) = mean(r>=rr);
+    else
+        pp_DMT_int(i) = mean(r<=rr);
+    end 
+end
+
+%% PCB CE vs intensity
+
+for i=1:nsub
+   [r,p] = corr(win_pcb_ce_global(i,:)',pcb_intensity(i,:)','type','Spearman');
+    for perm=1:nperms
+        idx1 = randperm(length(pcb_intensity));
+        rr(perm) = corr(win_pcb_ce_global(i,idx1)',pcb_intensity(i,:)','type','Spearman');
+    end
+    if r<0
+        pp_PCB_int(i) = mean(r>=rr);
+    else
+        pp_PCB_int(i) = mean(r<=rr);
+    end  
+end
+
+%% CORRECT and PLOT
+
+pfdr_all = mafdr([pp_DMT_eg pp_PCB_eg pp_DMT_int pp_PCB_int],'BH',1);
+pfdr_all = reshape(pfdr_all,[14 4])';
+
+pfdr = pfdr_all(1,:);
+
+figure;
+for i=1:nsub
+    subplot(7,2,i)
+    hold on
+    plot(global_CE_dmt(i,:)','blue','LineWidth',1.5)
+    
+    ylabel('CE (a.u.)')
+    yyaxis right
+    plot(RegDMT2(i,:)','green','LineWidth',1.5)
+    ylabel('LZc (a.u.)')
+    ax = gca; % Get the current axes
+    ax.YAxis(2).Color = 'black'; % Set the right y-axis color
+    yyaxis left
+    [r,p] = corr(global_CE_dmt(i,:)',RegDMT2(i,:)','type','Spearman');
+    text(400,200,['R = ',num2str(round(r,2)),'; p = ',num2str(round(pfdr(i),4))],'FontSize',12)
+    xlabel('Minutes')
+    tics = linspace(0,28,8);
+    tics = tics*30;
+    tics(end)=838;
+    xlim([0 838])
+    xticks(tics)
+    xticklabels([{'-8'},{'-4'},{'0'},{'4'},{'8'},{'12'},{'16'},{'20'}]);
+end
+set(gcf,'Position',[0 0 1000 975])
+
+pfdr = pfdr_all(2,:);
 
 figure;
 for i=1:nsub
@@ -612,22 +626,7 @@ for i=1:nsub
 end
 set(gcf,'Position',[0 0 1000 975])
 
-%% DMT CE vs intensity
-
-for i=1:nsub
-    [r,p] = corr(win_dmt_ce_global(i,:)',dmt_intensity(i,:)','type','Spearman');
-   for perm=1:nperms
-        idx1 = randperm(length(dmt_intensity));
-        rr(perm) = corr(win_dmt_ce_global(i,idx1)',dmt_intensity(i,:)','type','Spearman');
-    end
-    if r<0
-        pp2(i) = mean(r>=rr);
-    else
-        pp2(i) = mean(r<=rr);
-    end 
-end
-
-pfdr = mafdr(pp2,'BH',1);
+pfdr = pfdr_all(3,:);
 
 figure;
 for i=1:nsub
@@ -648,21 +647,7 @@ for i=1:nsub
 end
 set(gcf,'Position',[0 0 1000 975])
 
-%%
-
-for i=1:nsub
-   [r,p] = corr(win_pcb_ce_global(i,:)',pcb_intensity(i,:)','type','Spearman');
-    for perm=1:nperms
-        idx1 = randperm(length(pcb_intensity));
-        rr(perm) = corr(win_pcb_ce_global(i,idx1)',pcb_intensity(i,:)','type','Spearman');
-    end
-    if r<0
-        pp2(i) = mean(r>=rr);
-    else
-        pp2(i) = mean(r<=rr);
-    end  
-end
-pfdr = mafdr(pp2,'BH',1);
+pfdr = pfdr_all(4,:);
 
 figure;
 for i=1:nsub
@@ -682,39 +667,3 @@ for i=1:nsub
     xticklabels([{'-8'},{'-6'},{'-4'},{'-2'},{'0'},{'2'},{'4'},{'6'},{'8'},{'10'},{'12'},{'14'},{'16'},{'18'},{'20'}]);
 end
 set(gcf,'Position',[0 0 1000 975])
-
-%%
-
-
-figure;
-for i=1:nsub
-    subplot(7,2,i)
-    cei = global_CE_pcb(i,:)-global_CE_dmt(i,:);
-    sdi = RegPCB2(i,:)-RegDMT2(i,:);
-    hold on
-    plot(cei','blue','LineWidth',1.5)
-    
-    ylabel('CE')
-    yyaxis right
-    plot(sdi','green','LineWidth',1.5)
-    ylabel('LZ')
-    yyaxis left
-    [r,p] = corr(cei',sdi','type','Spearman');
-    for perm=1:nperms
-        idx1 = randperm(length(diff_lz));
-        rr(perm) = corr(cei',sdi(1,idx1)','type','Spearman');
-    end
-    pp(i) = mean(r>=rr)
-    text(400,200,['R = ',num2str(r),'; p = ',num2str(pp(i))],'FontSize',12)
-%     title([{'Group-level continuous control energy vs signal diversity'};{'(DMT - PCB)'}])
-    xlabel('Minutes')
-    tics = linspace(0,28,15);
-    tics = tics*30;
-    tics(end)=838;
-    xlim([0 838])
-    xticks(tics)
-    xticklabels([{'-8'},{'-6'},{'-4'},{'-2'},{'0'},{'2'},{'4'},{'6'},{'8'},{'10'},{'12'},{'14'},{'16'},{'18'},{'20'}]);
-%     legend('∆Control Energy (fMRI)','∆Limpel-Ziv Complexity (EEG)')
-end
-
-pfdr = mafdr(pp,'BH',1)
