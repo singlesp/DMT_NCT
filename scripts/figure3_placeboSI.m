@@ -113,6 +113,9 @@ writetable(mydata, [basedir,input_filename,note, '.csv']);
 
 %% regional CE vs LZ; corr w sub
 
+load(fullfile([basedir,'results/regional_continuous_CE_PCB',note,'.mat']),'regional_CE_pcb');
+
+
 load([basedir,'data/RegressorLZInterpscrubbedConvolvedAvg.mat'])
 
 m_pcb_LZ = nanmean(RegPCB2);
@@ -156,7 +159,7 @@ img=display_atlas_blobs(data,atlasblobs,...
 
 imshow(img);
 c=colorbar('SouthOutside', 'fontsize', 16);
-c.Label.String='∆CE: (post - pre)/pre';
+c.Label.String='rho';
 set(gca,'colormap',cmap);
 caxis(clim);
 
@@ -274,7 +277,7 @@ img=display_atlas_blobs(data,atlasblobs,...
 
 imshow(img);
 c=colorbar('SouthOutside', 'fontsize', 16);
-c.Label.String='Pearson''s R';
+c.Label.String='rho';
 set(gca,'colormap',cmap);
 caxis(clim);
 

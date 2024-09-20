@@ -57,7 +57,7 @@ for i = 1:length(receptors)
     lz_relimp(i) = lz_dom.PercentageRelativeImportance(strcmp(lz_dom.Var1,varnames(i)));
 end
 
-%% FIGURE 4
+%% FIGURE 4 (placebo version)
 
 P = [diffE_relImp; int_relImp; lz_relimp];
 
