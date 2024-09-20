@@ -195,7 +195,7 @@ vT=mean5HTT_sch116;
 
 allv = [v2a v1a v1b v4 vT];
 
-[r_avg,p_avg]=corr(m_pcb_LZ',squeeze(nanmean(regional_CE_pcb,1)));
+[r_avg,p_avg]=corr(m_pcb_LZ',squeeze(nanmean(regional_CE_pcb,1)),'type','Spearman');
 target = r_avg';
 
 varnames=[{'HT2a'},{'HT1a'},{'HT1b'},{'HT4'},{'HTT'},{'target'}];
@@ -316,7 +316,7 @@ vT=mean5HTT_sch116;
 
 allv = [v2a v1a v1b v4 vT];
 
-[r_avg,p_avg]=corr(m_pcb_int',squeeze(mean(win_pcb_ce,1)));
+[r_avg,p_avg]=corr(m_pcb_int',squeeze(mean(win_pcb_ce,1)),'type','Spearman');
 target = r_avg';
 
 varnames=[{'HT2a'},{'HT1a'},{'HT1b'},{'HT4'},{'HTT'},{'target'}];
