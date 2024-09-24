@@ -163,7 +163,7 @@ img=display_atlas_blobs(data,atlasblobs,...
 
 imshow(img);
 c=colorbar('SouthOutside', 'fontsize', 16);
-c.Label.String='∆CE: (post - pre)/pre';
+c.Label.String='rho';
 set(gca,'colormap',cmap);
 caxis(clim);
 
@@ -199,7 +199,7 @@ vT=mean5HTT_sch116;
 
 allv = [v2a v1a v1b v4 vT];
 
-[r_avg,p_avg]=corr(m_dmt_LZ',squeeze(mean(regional_CE_dmt,1)));
+[r_avg,p_avg]=corr(m_dmt_LZ',squeeze(mean(regional_CE_dmt,1)),'type','Spearman');
 target = r_avg';
 
 varnames=[{'HT2a'},{'HT1a'},{'HT1b'},{'HT4'},{'HTT'},{'target'}];
@@ -319,7 +319,7 @@ vT=mean5HTT_sch116;
 
 allv = [v2a v1a v1b v4 vT];
 
-[r_avg,p_avg]=corr(m_dmt_int',squeeze(mean(win_dmt_ce,1)));
+[r_avg,p_avg]=corr(m_dmt_int',squeeze(mean(win_dmt_ce,1)),'type','Spearman');
 target = r_avg';
 
 varnames=[{'HT2a'},{'HT1a'},{'HT1b'},{'HT4'},{'HTT'},{'target'}];
