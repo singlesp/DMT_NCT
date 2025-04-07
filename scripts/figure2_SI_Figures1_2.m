@@ -8,7 +8,7 @@ nperms=10000;
 
 basedir = '~/Documents/GIT/DMT_NCT/';
 
-note='_gsr_volnorm'; %track different proc streams
+note='_demean_volnorm'; %track different proc streams
 
 load([basedir,'results/regional_continuous_CE_DMT',note,'.mat'])
 load([basedir,'results/regional_continuous_CE_PCB',note,'.mat'])
@@ -635,11 +635,11 @@ for i=1:nsub
     hold on
     plot(win_dmt_ce_global(i,:)','bo--','LineWidth',1.5)
     text(16,100,['R = ',num2str(round(r,2)),'; p = ',num2str(round(pfdr(i),4))],'FontSize',12)
-    ylabel('CE')
+    ylabel('CE'); ylim([0 350])
     yyaxis right
     plot(dmt_intensity(i,:)','go--','LineWidth',1.5)
     ylabel('Intensity Ratings')
-    ylim([0 10])
+    ylim([-1 11])
     xlabel('Minutes')
     xlim([0 28])
     xticks(linspace(0,28,15))
@@ -656,11 +656,11 @@ for i=1:nsub
     hold on
     plot(win_pcb_ce_global(i,:)','bo--','LineWidth',1.5)
     text(16,100,['R = ',num2str(round(r,2)),'; p = ',num2str(round(pfdr(i),4))],'FontSize',12)
-    ylabel('CE')
+    ylabel('CE'); ylim([0 450])
     yyaxis right
     plot(pcb_intensity(i,:)','go--','LineWidth',1.5)
     ylabel('Intensity Ratings')
-    ylim([0 10])
+    ylim([-1 11])
     xlabel('Minutes')
     xlim([0 28])
     xticks(linspace(0,28,15))
