@@ -8,7 +8,7 @@ nperms=10000;
 
 basedir = '~/Documents/GIT/DMT_NCT/';
 
-note='_demean_volnorm'; %track different proc streams
+note='_gsr_volnorm'; %track different proc streams
 
 load([basedir,'results/regional_continuous_CE_DMT',note,'.mat'])
 load([basedir,'results/regional_continuous_CE_PCB',note,'.mat'])

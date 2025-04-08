@@ -20,6 +20,8 @@ nsub=14;
 [nparc, transitions] = size(TS{1,1});
 transitions = transitions - 2; %skip first transition
 
+addpath(genpath('~/Documents/MATLAB/boundedline'))
+
 %% simulated E using Alpha effect compartment concentration
 
 load data/5HTvecs_sch116.mat mean5HT2A_sch116
@@ -99,21 +101,16 @@ legend('DMT vs Simulation','PCB vs Simulation')
 
 %%
 
-mean_dmt = nanmean(global_CE_dmt);
-mean_pcb = nanmean(global_CE_pcb);
-
 rho=30;
 load(fullfile([basedir,'results/simulations/simulated_sub_Alphaeffectconc_E_rho_',num2str(rho),note,'.mat']))
-
-mean_alpha_sim = nanmean(E_weighted_global_alpha);
 
 figure;
 title([{'Control Energy Time-Series'};{'continuous data (group means)'}])
 hold on
-    plot(mean_dmt,'black','LineWidth',2)
-    plot(mean_alpha_sim,'r','LineWidth',2)
-ylabel('Control Energy (TR-1 to TR)')
-xlabel('Time (TRs)')
+    plot_bounded_line(global_CE_dmt,[0 0 0])
+    plot_bounded_line(E_weighted_global_alpha,[1 0 0])
+ylabel('Control Energy')
+ylim([0 300])
 tics = linspace(0,28,15);
 tics = tics*30;
 tics(end)=838;
