@@ -1,6 +1,6 @@
 ,Predictors,Generally Dominating,Conditionally Dominating,Completely Dominating
-0,HT2a,"['HTT', 'HT1b', 'HT4', 'HT1a']","['HTT', 'HT1b', 'HT4', 'HT1a']","['HTT', 'HT1b', 'HT4', 'HT1a']"
-1,HTT,"['HT1b', 'HT4', 'HT1a']",,
-2,HT1b,"['HT4', 'HT1a']",,
-3,HT4,['HT1a'],,
-4,HT1a,[],,
+0,HT2a,"['HTT', 'HT1b', 'HT1a', 'HT4']","['HTT', 'HT1b', 'HT1a', 'HT4']","['HTT', 'HT1b', 'HT1a', 'HT4']"
+1,HTT,"['HT1b', 'HT1a', 'HT4']",,
+2,HT1b,"['HT1a', 'HT4']",,
+3,HT1a,['HT4'],,
+4,HT4,[],,

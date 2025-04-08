@@ -1,0 +1,6 @@
+,Predictors,Generally Dominating,Conditionally Dominating,Completely Dominating
+0,HT1a,"['HTT', 'HT2a', 'HT4', 'HT1b']",,
+1,HTT,"['HT2a', 'HT4', 'HT1b']","['HT2a', 'HT4', 'HT1b']","['HT2a', 'HT4', 'HT1b']"
+2,HT2a,"['HT4', 'HT1b']","['HT4', 'HT1b']","['HT4', 'HT1b']"
+3,HT4,['HT1b'],,
+4,HT1b,[],,
