@@ -1,6 +1,6 @@
 # DMT_NCT
 
-cite: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15177511.svg)](https://doi.org/10.5281/zenodo.15177511)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15177511.svg)](https://doi.org/10.5281/zenodo.15177511)
 
 
 "Time-resolved network control analysis links reduced control energy under DMT with the serotonin 2a receptor, signal diversity, and subjective experience"
